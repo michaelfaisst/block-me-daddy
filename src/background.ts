@@ -1,3 +1,11 @@
+chrome.action.onClicked.addListener(() => {
+    if (chrome.runtime.openOptionsPage) {
+        chrome.runtime.openOptionsPage();
+    } else {
+        window.open(chrome.runtime.getURL("options.html"));
+    }
+});
+
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     if (tab.id == undefined) return;
 
@@ -15,7 +23,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         );
 
         if (site) {
-            chrome.tabs.remove(tabId);
+            chrome.tabs.update(tab.id, { url: "blocked.html" });
         }
     }
 });

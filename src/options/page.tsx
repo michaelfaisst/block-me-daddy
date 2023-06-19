@@ -11,15 +11,18 @@ const OptionsPage = () => {
     };
 
     return (
-        <div className="container mt-6">
+        <div className="container mt-12">
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
                 Block me daddy
             </h1>
-            <p className="scroll-m-20 text-base text-gray-500 mb-8">
+            <p className="scroll-m-20 text-base text-gray-500 mb-12">
                 Block sites like youtube, twitch and all these other nasty sites
                 that suck all productivity out of you
             </p>
 
+            <p className="scroll-m-20 text-lg font-bold tracking-tight mb-2">
+                Blocked sites
+            </p>
             <div className="flex flex-col divide-y divide-gray-100 mb-4">
                 {sites.map((site) => (
                     <div
