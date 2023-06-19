@@ -1,0 +1,42 @@
+{
+    "name": "block-me-daddy",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "prettify": "prettier --write \"./**/*.{js,jsx,ts,tsx,html}\""
+    },
+    "dependencies": {
+        "@hookform/resolvers": "3.1.1",
+        "@paralleldrive/cuid2": "2.2.1",
+        "@radix-ui/react-dialog": "1.0.4",
+        "@radix-ui/react-label": "2.0.2",
+        "@radix-ui/react-slot": "1.0.2",
+        "class-variance-authority": "0.6.0",
+        "clsx": "1.2.1",
+        "lucide-react": "0.246.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-hook-form": "7.45.0-next.1",
+        "tailwind-merge": "1.13.2",
+        "tailwindcss-animate": "1.0.6",
+        "use-chrome-storage": "1.2.1",
+        "zod": "3.21.4"
+    },
+    "devDependencies": {
+        "@crxjs/vite-plugin": "2.0.0-beta.18",
+        "@types/chrome": "0.0.237",
+        "@types/node": "20.3.1",
+        "@types/react": "^18.2.12",
+        "@types/react-dom": "^18.2.5",
+        "@vitejs/plugin-react": "^4.0.0",
+        "autoprefixer": "10.4.14",
+        "postcss": "8.4.24",
+        "tailwindcss": "3.3.2",
+        "typescript": "5.1.3",
+        "vite": "^4.3.9"
+    }
+}
