@@ -26,7 +26,13 @@ const OptionsPage = () => {
                         key={site.id}
                         className="py-3 flex flex-row justify-between items-center"
                     >
-                        <div className="text-sm">{site.site}</div>
+                        <div className="text-sm flex flex-row items-center">
+                            <img
+                                className="w-4 h-4 mr-2"
+                                src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${site.site}`}
+                            />
+                            <div>{site.site}</div>
+                        </div>
                         <div className="flex flex-row items-center gap-2">
                             <Button variant="ghost">
                                 <LucideEdit size={16} />

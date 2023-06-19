@@ -5,6 +5,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
     const hostName = url ? new URL(url).hostname : null;
 
+    if (!hostName) return;
+
     const sites = await chrome.storage.local.get("sites");
 
     if (sites.sites) {
