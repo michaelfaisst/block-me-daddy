@@ -1,10 +1,11 @@
 import { LucideEdit, LucideTrash } from "lucide-react";
 import AddSiteDialog from "../components/add-site";
-import { Button, Dialog, DialogTrigger } from "../components/ui";
+import { Button, Dialog, DialogTrigger, Label, Switch } from "../components/ui";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 const OptionsPage = () => {
     const [sites, setSites] = useChromeStorageLocal<ISite[]>("sites", []);
+    const [enabled, setEnabled] = useChromeStorageLocal<boolean>("enabled");
 
     const deleteSite = (id: string) => {
         setSites(sites.filter((site) => site.id !== id));
@@ -19,6 +20,20 @@ const OptionsPage = () => {
                 Block sites like youtube, twitch and all these other nasty sites
                 that suck all productivity out of you
             </p>
+
+            <div className="mb-10">
+                <p className="scroll-m-20 text-lg font-bold tracking-tight mb-4">
+                    General settings
+                </p>
+                <div className="flex items-center space-x-2">
+                    <Switch
+                        id="airplane-mode"
+                        checked={enabled}
+                        onCheckedChange={(checked) => setEnabled(checked)}
+                    />
+                    <Label htmlFor="airplane-mode">Blocking enabled</Label>
+                </div>
+            </div>
 
             <p className="scroll-m-20 text-lg font-bold tracking-tight mb-2">
                 Blocked sites

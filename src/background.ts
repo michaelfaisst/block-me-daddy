@@ -6,7 +6,7 @@ chrome.action.onClicked.addListener(() => {
     }
 });
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
     if (tab.id == undefined) return;
 
     const url = changeInfo.url || tab.pendingUrl || tab.url;
@@ -15,10 +15,13 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
     if (!hostName) return;
 
-    const sites = await chrome.storage.local.get("sites");
+    const enabledSettings = await chrome.storage.local.get("enabled");
+    if (!enabledSettings.enabled) return;
 
-    if (sites.sites) {
-        const site = sites.sites.find((site: any) =>
+    const siteSettings = await chrome.storage.local.get("sites");
+
+    if (siteSettings.sites) {
+        const site = siteSettings.sites.find((site: any) =>
             site.site.includes(hostName)
         );
 
