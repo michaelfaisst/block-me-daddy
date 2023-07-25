@@ -1,6 +1,6 @@
 import { LucideEdit, LucideTrash } from "lucide-react";
 import AddSiteDialog from "../components/add-site";
-import { Button, Dialog, DialogTrigger, Label, Switch } from "../components/ui";
+import { Button, Label, Switch } from "../components/ui";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 const OptionsPage = () => {
@@ -17,8 +17,8 @@ const OptionsPage = () => {
                 Block me daddy
             </h1>
             <p className="scroll-m-20 text-base text-gray-500 mb-12">
-                Block sites like youtube, twitch and all these other nasty sites
-                that suck all productivity out of you
+                Block sites like youtube, facebook, instagram and all these
+                other nasty sites that suck all productivity out of you
             </p>
 
             <div className="mb-10">

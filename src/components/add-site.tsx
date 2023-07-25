@@ -12,7 +12,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-    Input
+    Input,
+    Switch
 } from "./ui";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,7 +24,8 @@ import * as z from "zod";
 import { useState } from "react";
 
 const formSchema = z.object({
-    site: z.string().url()
+    site: z.string().url(),
+    exact: z.boolean().default(false)
 });
 
 const AddSiteDialog = () => {
@@ -38,7 +40,10 @@ const AddSiteDialog = () => {
     });
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
-        setSites([...sites, { site: data.site, id: createId() }]);
+        setSites([
+            ...sites,
+            { id: createId(), site: data.site, exact: data.exact }
+        ]);
         setOpen(false);
     };
 
@@ -54,7 +59,7 @@ const AddSiteDialog = () => {
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="space-y-8">
+                        <div className="space-y-4">
                             <FormField
                                 control={form.control}
                                 name="site"
@@ -63,6 +68,22 @@ const AddSiteDialog = () => {
                                         <FormLabel>Site</FormLabel>
                                         <FormControl>
                                             <Input {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="exact"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row justify-between items-center space-y-0">
+                                        <FormLabel>Exact match</FormLabel>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
