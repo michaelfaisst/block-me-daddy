@@ -6,3 +6,4 @@ export * from "./form";
 export * from "./switch";
 export * from "./badge";
 export * from "./dropdown";
+export * from "./tooltip";

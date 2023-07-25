@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createId } from "@paralleldrive/cuid2";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useChromeStorageLocal } from "use-chrome-storage";
@@ -51,7 +52,9 @@ const AddSiteDialog = () => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
-                <Button>Add site</Button>
+                <Button>
+                    <PlusIcon className="w-4 h-4 mr-2" /> Add site
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

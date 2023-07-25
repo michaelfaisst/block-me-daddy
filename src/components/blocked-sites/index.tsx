@@ -1,7 +1,7 @@
 import { LucideTrash } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
-import { Badge, Button } from "../ui";
+import { Badge, Button, Tooltip, TooltipContent, TooltipTrigger } from "../ui";
 import AddSiteDialog from "./add-site";
 import EditSiteDialog from "./edit-site";
 
@@ -51,16 +51,31 @@ const BlockedSites = () => {
                             )}
                         </div>
                         <div className="flex flex-row items-center gap-2">
-                            <EditSiteDialog
-                                site={site}
-                                onSiteUpdated={updateSite}
-                            />
-                            <Button variant="ghost">
-                                <LucideTrash
-                                    size={16}
-                                    onClick={() => deleteSite(site.id)}
-                                />
-                            </Button>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <EditSiteDialog
+                                        site={site}
+                                        onSiteUpdated={updateSite}
+                                    />
+                                </TooltipTrigger>
+                                <TooltipContent side="left">
+                                    Edit site
+                                </TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <Button variant="ghost">
+                                        <LucideTrash
+                                            size={16}
+                                            onClick={() => deleteSite(site.id)}
+                                        />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="left">
+                                    Delete site
+                                </TooltipContent>
+                            </Tooltip>
                         </div>
                     </div>
                 ))}

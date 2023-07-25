@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
+import { TooltipProvider } from "../components/ui/tooltip";
 import { ThemeProvider } from "../context/theme";
 import "../index.css";
 import OptionsPage from "./page";
@@ -8,7 +9,9 @@ import OptionsPage from "./page";
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <ThemeProvider>
-            <OptionsPage />
+            <TooltipProvider>
+                <OptionsPage />
+            </TooltipProvider>
         </ThemeProvider>
     </React.StrictMode>
 );

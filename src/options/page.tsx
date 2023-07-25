@@ -3,7 +3,14 @@ import { useChromeStorageLocal } from "use-chrome-storage";
 
 import BlockedSites from "../components/blocked-sites";
 import { ThemeToggle } from "../components/theme-toggle";
-import { Button, Label, Switch } from "../components/ui";
+import {
+    Button,
+    Label,
+    Switch,
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger
+} from "../components/ui";
 
 const OptionsPage = () => {
     const [enabled, setEnabled] = useChromeStorageLocal<boolean>("enabled");
@@ -22,10 +29,27 @@ const OptionsPage = () => {
                     Block me daddy
                 </h1>
                 <div className="flex flex-row items-center gap-2">
-                    <Button size="sm" variant="outline" onClick={openGithub}>
-                        <GithubIcon className="w-4 h-4" />
-                    </Button>
-                    <ThemeToggle />
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={openGithub}
+                            >
+                                <GithubIcon className="w-4 h-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            Open source code on GitHub
+                        </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <ThemeToggle />
+                        </TooltipTrigger>
+                        <TooltipContent>Toggle theme</TooltipContent>
+                    </Tooltip>
                 </div>
             </div>
             <p className="scroll-m-20 text-base text-gray-500 mb-12">
