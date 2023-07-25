@@ -1,14 +1,30 @@
-import { LucideEdit, LucideTrash } from "lucide-react";
+import { LucideTrash } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
-import { Button } from "../ui";
+import { Badge, Button } from "../ui";
 import AddSiteDialog from "./add-site";
+import EditSiteDialog from "./edit-site";
 
 const BlockedSites = () => {
     const [sites, setSites] = useChromeStorageLocal<ISite[]>("sites", []);
 
     const deleteSite = (id: string) => {
         setSites(sites.filter((site) => site.id !== id));
+    };
+
+    const updateSite = (updatedSite: ISite) => {
+        setSites(
+            sites.map((site) => {
+                if (site.id === updatedSite.id) {
+                    return {
+                        ...site,
+                        ...updatedSite
+                    };
+                }
+
+                return site;
+            })
+        );
     };
 
     return (
@@ -27,12 +43,18 @@ const BlockedSites = () => {
                                 className="w-4 h-4 mr-2"
                                 src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${site.site}`}
                             />
-                            <div>{site.site}</div>
+                            <div className="break-all">{site.site}</div>
+                            {site.exact && (
+                                <Badge variant="secondary" className="ml-4">
+                                    Exact
+                                </Badge>
+                            )}
                         </div>
                         <div className="flex flex-row items-center gap-2">
-                            <Button variant="ghost">
-                                <LucideEdit size={16} />
-                            </Button>
+                            <EditSiteDialog
+                                site={site}
+                                onSiteUpdated={updateSite}
+                            />
                             <Button variant="ghost">
                                 <LucideTrash
                                     size={16}
