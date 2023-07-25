@@ -66,12 +66,7 @@ const OptionsPage = () => {
                 ))}
             </div>
 
-            <Dialog>
-                <DialogTrigger>
-                    <Button>Add site</Button>
-                </DialogTrigger>
-                <AddSiteDialog />
-            </Dialog>
+            <AddSiteDialog />
         </div>
     );
 };
