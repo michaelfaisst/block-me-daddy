@@ -9,7 +9,7 @@ import manifest from "./manifest.json";
 export default defineConfig({
     resolve: {
         alias: {
-            "@": resolve(__dirname, "src")
+            "@": resolve(__dirname, "./src")
         }
     },
     plugins: [react(), crx({ manifest })],

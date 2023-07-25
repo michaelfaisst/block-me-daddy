@@ -5,3 +5,4 @@ export * from "./label";
 export * from "./form";
 export * from "./switch";
 export * from "./badge";
+export * from "./dropdown";

@@ -1,19 +1,36 @@
+import { GithubIcon } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import BlockedSites from "../components/blocked-sites";
-import { Label, Switch } from "../components/ui";
+import { ThemeToggle } from "../components/theme-toggle";
+import { Button, Label, Switch } from "../components/ui";
 
 const OptionsPage = () => {
     const [enabled, setEnabled] = useChromeStorageLocal<boolean>("enabled");
 
+    const openGithub = () => {
+        window.open(
+            "https://github.com/michaelfaisst/block-me-daddy",
+            "_blank"
+        );
+    };
+
     return (
         <div className="container mt-12">
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
-                Block me daddy
-            </h1>
+            <div className="flex flex-row items-center justify-between">
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
+                    Block me daddy
+                </h1>
+                <div className="flex flex-row items-center gap-2">
+                    <Button size="sm" variant="outline" onClick={openGithub}>
+                        <GithubIcon className="w-4 h-4" />
+                    </Button>
+                    <ThemeToggle />
+                </div>
+            </div>
             <p className="scroll-m-20 text-base text-gray-500 mb-12">
                 Block sites like youtube, facebook, instagram and all these
-                other nasty sites that suck all productivity out of you
+                other nasty sites that suck all productivity out of you.
             </p>
 
             <div className="mb-10">
