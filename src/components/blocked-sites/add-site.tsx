@@ -1,3 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createId } from "@paralleldrive/cuid2";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useChromeStorageLocal } from "use-chrome-storage";
+import * as z from "zod";
+
 import {
     Button,
     Dialog,
@@ -14,14 +21,7 @@ import {
     FormMessage,
     Input,
     Switch
-} from "./ui";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useChromeStorageLocal } from "use-chrome-storage";
-import { createId } from "@paralleldrive/cuid2";
-
-import * as z from "zod";
-import { useState } from "react";
+} from "../ui";
 
 const formSchema = z.object({
     site: z.string().url(),
@@ -45,6 +45,7 @@ const AddSiteDialog = () => {
             { id: createId(), site: data.site, exact: data.exact }
         ]);
         setOpen(false);
+        form.reset();
     };
 
     return (
