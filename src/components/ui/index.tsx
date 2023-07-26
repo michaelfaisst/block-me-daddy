@@ -7,3 +7,5 @@ export * from "./switch";
 export * from "./badge";
 export * from "./dropdown";
 export * from "./tooltip";
+export * from "./alert";
+export * from "./alert-dialog";

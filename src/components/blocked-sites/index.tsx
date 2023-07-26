@@ -1,7 +1,10 @@
-import { LucideTrash } from "lucide-react";
+import { LucideMegaphone, LucideTrash } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
     Badge,
     Button,
     Tooltip,
@@ -36,10 +39,26 @@ const BlockedSites = () => {
 
     return (
         <>
-            <p className="scroll-m-20 text-lg font-bold tracking-tight mb-2">
+            <p className="scroll-m-20 text-2xl font-bold tracking-tight mb-2">
                 Blocked sites
             </p>
-            <div className="flex flex-col divide-y divide-gray-100 mb-4">
+            <p className="scroll-m-20 text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Here you can list all sites that you want to block while
+                blocking is enabled.
+            </p>
+            <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800 mb-4">
+                {sites.length === 0 && (
+                    <Alert>
+                        <LucideMegaphone className="h-4 w-4 mr-4" />
+                        <AlertTitle>You have no blocked sites yet!</AlertTitle>
+                        <AlertDescription className="text-secondary-foreground">
+                            Add your first site by clicking the button below.
+                            Afterall, this extension would be pretty useless if
+                            you don't block any sites 🤓
+                        </AlertDescription>
+                    </Alert>
+                )}
+
                 {sites.map((site) => (
                     <div
                         key={site.id}

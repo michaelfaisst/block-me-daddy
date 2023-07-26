@@ -1,6 +1,8 @@
 import { GithubIcon } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
+import Schedule from "@/components/schedule";
+
 import BlockedSites from "../components/blocked-sites";
 import { ThemeToggle } from "../components/theme-toggle";
 import {
@@ -25,7 +27,7 @@ const OptionsPage = () => {
     return (
         <div className="container mt-12">
             <div className="flex flex-row items-center justify-between">
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tighter lg:text-5xl mb-4">
                     Block me daddy
                 </h1>
                 <div className="flex flex-row items-center gap-2">
@@ -52,13 +54,13 @@ const OptionsPage = () => {
                     </Tooltip>
                 </div>
             </div>
-            <p className="scroll-m-20 text-base text-gray-500 mb-12">
+            <p className="scroll-m-20 text-base text-gray-500 dark:text-gray-400 mb-12">
                 Block sites like youtube, facebook, instagram and all these
                 other nasty sites that suck all productivity out of you.
             </p>
 
-            <div className="mb-10">
-                <p className="scroll-m-20 text-lg font-bold tracking-tight mb-4">
+            <div className="mb-16">
+                <p className="scroll-m-20 text-2xl font-bold tracking-tight mb-4">
                     General settings
                 </p>
                 <div className="flex items-center space-x-2">
@@ -71,7 +73,11 @@ const OptionsPage = () => {
                 </div>
             </div>
 
-            <BlockedSites />
+            <div className="mb-16">
+                <BlockedSites />
+            </div>
+
+            <Schedule />
         </div>
     );
 };
