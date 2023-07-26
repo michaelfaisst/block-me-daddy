@@ -17,14 +17,22 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
     const enabledSettings = await chrome.storage.local.get("enabled");
     if (!enabledSettings.enabled) return;
 
-    const siteSettings = await chrome.storage.local.get("sites");
+    const siteSettings = (await chrome.storage.local.get("sites")) as {
+        sites: ISite[];
+    };
     if (!siteSettings.sites) return;
 
-    const site = siteSettings.sites.find((site: any) =>
-        site.site.includes(hostName)
-    );
+    const site = siteSettings.sites.find((site) => {
+        const blockedURL = new URL(site.site);
 
-    if (site) {
+        if (!site.exact) {
+            return blockedURL.hostname == hostName;
+        }
+
+        return site.site == url;
+    });
+
+    if (site && site) {
         chrome.tabs.update(tab.id, { url: "blocked.html" });
     }
 });
