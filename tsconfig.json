@@ -15,12 +15,12 @@
         "isolatedModules": false,
         "noEmit": true,
         "jsx": "react-jsx",
-        "types": ["chrome"]
+        "types": ["chrome"],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
     },
     "include": ["src"],
-    "references": [{ "path": "./tsconfig.node.json" }],
-    "baseUrl": ".",
-    "paths": {
-        "@/*": ["src/*"]
-    }
+    "references": [{ "path": "./tsconfig.node.json" }]
 }

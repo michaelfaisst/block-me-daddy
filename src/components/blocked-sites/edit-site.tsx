@@ -20,7 +20,7 @@ import {
     FormMessage,
     Input,
     Switch
-} from "../ui";
+} from "@/components/ui";
 
 const formSchema = z.object({
     id: z.string(),

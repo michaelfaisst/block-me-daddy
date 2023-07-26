@@ -2,8 +2,9 @@ import "@fontsource-variable/inter";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { TooltipProvider } from "../components/ui/tooltip";
-import { ThemeProvider } from "../context/theme";
+import { TooltipProvider } from "@/components/ui";
+import { ThemeProvider } from "@/context/theme";
+
 import "../index.css";
 import OptionsPage from "./page";
 

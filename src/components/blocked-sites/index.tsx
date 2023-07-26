@@ -1,7 +1,14 @@
 import { LucideTrash } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
-import { Badge, Button, Tooltip, TooltipContent, TooltipTrigger } from "../ui";
+import {
+    Badge,
+    Button,
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger
+} from "@/components/ui";
+
 import AddSiteDialog from "./add-site";
 import EditSiteDialog from "./edit-site";
 

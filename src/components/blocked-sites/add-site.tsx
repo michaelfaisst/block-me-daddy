@@ -22,7 +22,7 @@ import {
     FormMessage,
     Input,
     Switch
-} from "../ui";
+} from "@/components/ui";
 
 const formSchema = z.object({
     site: z.string().url(),
