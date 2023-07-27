@@ -11,18 +11,19 @@ import {
     TooltipContent,
     TooltipTrigger
 } from "@/components/ui";
+import { Site } from "@/dto";
 
 import AddSiteDialog from "./add-site";
 import EditSiteDialog from "./edit-site";
 
 const BlockedSites = () => {
-    const [sites, setSites] = useChromeStorageLocal<ISite[]>("sites", []);
+    const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
 
     const deleteSite = (id: string) => {
         setSites(sites.filter((site) => site.id !== id));
     };
 
-    const updateSite = (updatedSite: ISite) => {
+    const updateSite = (updatedSite: Site) => {
         setSites(
             sites.map((site) => {
                 if (site.id === updatedSite.id) {

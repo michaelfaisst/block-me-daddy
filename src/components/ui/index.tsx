@@ -9,3 +9,4 @@ export * from "./dropdown";
 export * from "./tooltip";
 export * from "./alert";
 export * from "./alert-dialog";
+export * from "./card";

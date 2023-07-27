@@ -1,7 +1,7 @@
 import { GithubIcon } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
-import Schedule from "@/components/schedule";
+import Schedules from "@/components/schedule";
 
 import BlockedSites from "../components/blocked-sites";
 import { ThemeToggle } from "../components/theme-toggle";
@@ -77,7 +77,9 @@ const OptionsPage = () => {
                 <BlockedSites />
             </div>
 
-            <Schedule />
+            <div className="mb-16">
+                <Schedules />
+            </div>
         </div>
     );
 };

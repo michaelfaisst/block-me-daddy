@@ -23,6 +23,7 @@ import {
     Input,
     Switch
 } from "@/components/ui";
+import { Site } from "@/dto";
 
 const formSchema = z.object({
     site: z.string().url(),
@@ -31,7 +32,7 @@ const formSchema = z.object({
 
 const AddSiteDialog = () => {
     const [open, setOpen] = useState(false);
-    const [sites, setSites] = useChromeStorageLocal<ISite[]>("sites", []);
+    const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
