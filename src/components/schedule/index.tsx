@@ -1,10 +1,10 @@
 import { createId } from "@paralleldrive/cuid2";
-import { LucidePlus } from "lucide-react";
+import { LucideMegaphone, LucidePlus } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import { Schedule } from "@/dto";
 
-import { Button } from "../ui";
+import { Alert, AlertDescription, AlertTitle, Button } from "../ui";
 import ScheduleCard from "./card";
 
 const Schedules = () => {
@@ -14,7 +14,6 @@ const Schedules = () => {
     );
 
     const onScheduleChanged = (schedule: Schedule) => {
-        console.log(schedule);
         setSchedules((schedules) =>
             schedules.map((s) => {
                 if (s.id === schedule.id) {
@@ -57,10 +56,24 @@ const Schedules = () => {
                 within any of the schedules, we will block the websites you have
                 chosen.
             </p>
+
+            {schedules.length === 0 && (
+                <Alert className="mb-4">
+                    <LucideMegaphone className="h-4 w-4 mr-4" />
+                    <AlertTitle>You have no schedules yet!</AlertTitle>
+                    <AlertDescription className="text-secondary-foreground">
+                        If you don't have any schedule, we will block the sites
+                        you chosen all the time (as long as blocking is
+                        enabled). To add a schedule, click the button below.
+                    </AlertDescription>
+                </Alert>
+            )}
+
             <Button className="mb-6" onClick={() => addNewSchedule()}>
                 <LucidePlus className="h-4 w-4 mr-2" />
                 Add schedule
             </Button>
+
             <div className="grid grid-cols-4 gap-4">
                 {schedules.map((schedule) => (
                     <ScheduleCard
