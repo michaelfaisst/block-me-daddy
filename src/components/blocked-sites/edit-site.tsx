@@ -21,6 +21,7 @@ import {
     Input,
     Switch
 } from "@/components/ui";
+import { Site } from "@/dto";
 
 const formSchema = z.object({
     id: z.string(),
@@ -29,8 +30,8 @@ const formSchema = z.object({
 });
 
 interface Props {
-    site: ISite;
-    onSiteUpdated: (site: ISite) => void;
+    site: Site;
+    onSiteUpdated: (site: Site) => void;
 }
 
 const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
