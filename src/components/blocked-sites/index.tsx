@@ -92,7 +92,7 @@ const BlockedSites = () => {
 
                             <Tooltip>
                                 <TooltipTrigger>
-                                    <Button variant="ghost">
+                                    <Button variant="ghostDestructive">
                                         <LucideTrash
                                             size={16}
                                             onClick={() => deleteSite(site.id)}

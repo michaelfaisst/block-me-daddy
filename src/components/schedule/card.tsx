@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import clsx from "clsx";
-import { LucideEdit } from "lucide-react";
+import { LucideEdit, LucideSave, LucideTrash } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Schedule, scheduleSchema } from "@/dto";
@@ -14,78 +14,135 @@ import {
     CardTitle,
     Form,
     FormControl,
+    FormField,
     FormItem,
-    FormLabel
+    FormLabel,
+    FormMessage,
+    TimeInput
 } from "../ui";
+import DaysSelect from "./day-select";
 
-const days = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+interface Props {
+    schedule: Schedule;
+    onChange: (schedule: Schedule) => void;
+    onRemove: (schedule: Schedule) => void;
+}
 
-const ScheduleCard = ({ schedule }: { schedule: Schedule }) => {
+const ScheduleCard = ({ schedule, onChange, onRemove }: Props) => {
+    const [editMode, setEditMode] = useState(false);
+
     const form = useForm<Schedule>({
         resolver: zodResolver(scheduleSchema),
         defaultValues: schedule
     });
 
-    const onSubmit = (data: Schedule) => {
-        console.log(data);
+    const handleSubmit = (schedule: Schedule) => {
+        setEditMode(false);
+        onChange(schedule);
     };
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-xl">Schedule</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <FormItem className="mb-8">
-                            <FormLabel>Days</FormLabel>
-                            <FormControl>
-                                <div className="flex flex-row flex-wrap gap-2">
-                                    {days.map((day, index) => {
-                                        const isDayIncluded =
-                                            schedule.weekDays.includes(
-                                                index + 1
-                                            );
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
+                <Card className="relative">
+                    <Button
+                        variant="ghostDestructive"
+                        size="sm"
+                        className="absolute right-1 top-1 z-10"
+                        type="button"
+                        onClick={() => onRemove(schedule)}
+                    >
+                        <LucideTrash className="h-4 w-4" />
+                    </Button>
+                    <CardHeader className="relative">
+                        <CardTitle className="text-xl">Schedule</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <FormField
+                            control={form.control}
+                            name="weekDays"
+                            render={({ field }) => (
+                                <FormItem className="mb-8">
+                                    <FormLabel>Days</FormLabel>
+                                    <FormControl>
+                                        <DaysSelect
+                                            disabled={!editMode}
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                                        return (
-                                            <div
-                                                className={clsx(
-                                                    "h-8 w-8 flex items-center justify-center rounded-full",
-                                                    {
-                                                        "bg-primary text-primary-foreground":
-                                                            isDayIncluded,
-                                                        "bg-primary-foreground":
-                                                            !isDayIncluded
-                                                    }
-                                                )}
-                                            >
-                                                {day}
-                                            </div>
-                                        );
-                                    })}
+                        <FormLabel className="mb-1">Time</FormLabel>
+
+                        <div className="mt-1">
+                            {editMode ? (
+                                <div className="flex gap-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="timeFrom"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <TimeInput
+                                                        {...field}
+                                                        disabled={!editMode}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <span className="mt-[10px]">-</span>
+                                    <FormField
+                                        control={form.control}
+                                        name="timeTo"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <TimeInput
+                                                        {...field}
+                                                        disabled={!editMode}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </div>
-                            </FormControl>
-                        </FormItem>
-
-                        <FormItem>
-                            <FormLabel>Time</FormLabel>
-                            <FormControl>
-                                <div className="text-lg font-bold tracking-tight">
+                            ) : (
+                                <div className="h-9 text-lg font-bold tracking-tight flex items-center">
                                     {schedule.timeFrom} - {schedule.timeTo}
                                 </div>
-                            </FormControl>
-                        </FormItem>
-                    </form>
-                </Form>
-            </CardContent>
-            <CardFooter>
-                <Button variant="outline">
-                    <LucideEdit className="h-4 w-4 mr-2" />
-                    Edit
-                </Button>
-            </CardFooter>
-        </Card>
+                            )}
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        {editMode ? (
+                            <Button className="flex-1" type="submit">
+                                <LucideSave className="h-4 w-4 mr-2" />
+                                Save
+                            </Button>
+                        ) : (
+                            <Button
+                                variant="outline"
+                                className="flex-1"
+                                type="button"
+                                onClick={(e) => {
+                                    setEditMode(true);
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                }}
+                            >
+                                <LucideEdit className="h-4 w-4 mr-2" />
+                                Edit
+                            </Button>
+                        )}
+                    </CardFooter>
+                </Card>
+            </form>
+        </Form>
     );
 };
 

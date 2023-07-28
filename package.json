@@ -27,6 +27,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-hook-form": "7.45.0-next.1",
+        "react-number-format": "5.2.2",
         "tailwind-merge": "1.13.2",
         "tailwindcss-animate": "1.0.6",
         "use-chrome-storage": "1.2.1",
