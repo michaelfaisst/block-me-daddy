@@ -25,7 +25,7 @@ const OptionsPage = () => {
     };
 
     return (
-        <div className="container mt-12">
+        <div className="container py-12">
             <div className="flex flex-row items-center justify-between">
                 <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tighter lg:text-5xl mb-4">
                     Block me daddy
@@ -77,7 +77,7 @@ const OptionsPage = () => {
                 <BlockedSites />
             </div>
 
-            <div className="mb-16">
+            <div className="">
                 <Schedules />
             </div>
         </div>

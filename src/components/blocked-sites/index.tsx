@@ -1,3 +1,4 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { LucideMegaphone, LucideTrash } from "lucide-react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
@@ -13,11 +14,15 @@ import {
 } from "@/components/ui";
 import { Site } from "@/dto";
 
+import AnimatePresence from "../animate-presence";
 import AddSiteDialog from "./add-site";
 import EditSiteDialog from "./edit-site";
 
 const BlockedSites = () => {
     const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
+    const [animationParent] = useAutoAnimate({
+        duration: 150
+    });
 
     const deleteSite = (id: string) => {
         setSites(sites.filter((site) => site.id !== id));
@@ -47,19 +52,23 @@ const BlockedSites = () => {
                 Here you can list all sites that you want to block while
                 blocking is enabled.
             </p>
-            <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800 mb-4">
-                {sites.length === 0 && (
-                    <Alert>
-                        <LucideMegaphone className="h-4 w-4 mr-4" />
-                        <AlertTitle>You have no blocked sites yet!</AlertTitle>
-                        <AlertDescription className="text-secondary-foreground">
-                            Add your first site by clicking the button below.
-                            Afterall, this extension would be pretty useless if
-                            you don't block any sites 🤓
-                        </AlertDescription>
-                    </Alert>
-                )}
 
+            <AnimatePresence visible={sites.length === 0}>
+                <Alert>
+                    <LucideMegaphone className="h-4 w-4 mr-4" />
+                    <AlertTitle>You have no blocked sites yet!</AlertTitle>
+                    <AlertDescription className="text-secondary-foreground">
+                        Add your first site by clicking the button below.
+                        Afterall, this extension would be pretty useless if you
+                        don't block any sites 🤓
+                    </AlertDescription>
+                </Alert>
+            </AnimatePresence>
+
+            <div
+                className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800 mb-4"
+                ref={animationParent}
+            >
                 {sites.map((site) => (
                     <div
                         key={site.id}
@@ -78,31 +87,17 @@ const BlockedSites = () => {
                             )}
                         </div>
                         <div className="flex flex-row items-center gap-2">
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <EditSiteDialog
-                                        site={site}
-                                        onSiteUpdated={updateSite}
-                                    />
-                                </TooltipTrigger>
-                                <TooltipContent side="left">
-                                    Edit site
-                                </TooltipContent>
-                            </Tooltip>
+                            <EditSiteDialog
+                                site={site}
+                                onSiteUpdated={updateSite}
+                            />
 
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <Button variant="ghostDestructive">
-                                        <LucideTrash
-                                            size={16}
-                                            onClick={() => deleteSite(site.id)}
-                                        />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent side="left">
-                                    Delete site
-                                </TooltipContent>
-                            </Tooltip>
+                            <Button variant="ghostDestructive">
+                                <LucideTrash
+                                    size={16}
+                                    onClick={() => deleteSite(site.id)}
+                                />
+                            </Button>
                         </div>
                     </div>
                 ))}
