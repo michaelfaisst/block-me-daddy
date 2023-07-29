@@ -1,6 +1,7 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { createId } from "@paralleldrive/cuid2";
 import { LucideMegaphone, LucidePlus } from "lucide-react";
+import { useRef } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import { Schedule } from "@/dto";
@@ -15,9 +16,11 @@ const Schedules = () => {
         []
     );
 
-    const [animationParent] = useAutoAnimate({
+    const [animationParent] = useAutoAnimate<HTMLDivElement>({
         duration: 150
     });
+
+    const listEndRef = useRef<HTMLDivElement>(null);
 
     const onScheduleChanged = (schedule: Schedule) => {
         setSchedules((schedules) =>
@@ -41,6 +44,10 @@ const Schedules = () => {
                 timeTo: "17:00"
             }
         ]);
+
+        setTimeout(() => {
+            listEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 150);
     };
 
     const removeSchedule = async (schedule: Schedule) => {
@@ -93,6 +100,7 @@ const Schedules = () => {
                     />
                 ))}
             </div>
+            <div ref={listEndRef} />
         </>
     );
 };
