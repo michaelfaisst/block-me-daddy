@@ -28,7 +28,12 @@ import {
 import { Site } from "@/dto";
 
 const formSchema = z.object({
-    site: z.string().url(),
+    site: z.string()
+        .min(1, "Site is required")
+        .regex(
+            /^(?!https?:\/\/)(?!www\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+            "Enter a domain without protocol or www (e.g., youtube.com)"
+        ),
     exact: z.boolean()
 });
 
@@ -45,6 +50,16 @@ const AddSiteDialog = () => {
     });
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
+        // Check if site already exists
+        const isDuplicate = sites.some(s => s.site === data.site);
+        if (isDuplicate) {
+            form.setError("site", {
+                type: "manual",
+                message: "This site has already been added"
+            });
+            return;
+        }
+
         setSites([
             ...sites,
             { id: createId(), site: data.site, exact: data.exact }
@@ -71,7 +86,7 @@ const AddSiteDialog = () => {
                             <Alert>
                                 <InfoIcon className="h-4 w-4" />
                                 <AlertDescription>
-                                    Enter a domain without protocol (e.g., youtube.com). 
+                                    Enter a domain without protocol or www (e.g., youtube.com). 
                                     Domains are matched flexibly - blocking youtube.com will also block www.youtube.com and https://youtube.com.
                                 </AlertDescription>
                             </Alert>

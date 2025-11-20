@@ -39,10 +39,11 @@ const formSchema = z.object({
 
 interface Props {
     site: Site;
+    sites: Site[];
     onSiteUpdated: (site: Site) => void;
 }
 
-const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
+const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
     const [open, setOpen] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -53,6 +54,16 @@ const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
     });
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
+        // Check if site already exists (excluding the current site being edited)
+        const isDuplicate = sites.some(s => s.id !== site.id && s.site === data.site);
+        if (isDuplicate) {
+            form.setError("site", {
+                type: "manual",
+                message: "This site has already been added"
+            });
+            return;
+        }
+
         // Store the original user input without normalization
         onSiteUpdated(data);
         setOpen(false);
@@ -77,7 +88,7 @@ const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
                             <Alert>
                                 <InfoIcon className="h-4 w-4" />
                                 <AlertDescription>
-                                    Enter a domain without protocol (e.g., youtube.com). 
+                                    Enter a domain without protocol or www (e.g., youtube.com). 
                                     Domains are matched flexibly - blocking youtube.com will also block www.youtube.com and https://youtube.com.
                                 </AlertDescription>
                             </Alert>

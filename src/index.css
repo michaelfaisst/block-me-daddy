@@ -41,7 +41,7 @@
         --foreground: 0 0% 98%;
 
         --muted: 0 0% 14.9%;
-        --muted-foreground: 0 0% 63.9%;
+        --muted-foreground: 0 0% 70%;
 
         --popover: 0 0% 3.9%;
         --popover-foreground: 0 0% 98%;
@@ -49,19 +49,19 @@
         --card: 0 0% 6.4%;
         --card-foreground: 0 0% 98%;
 
-        --border: 0 0% 14.9%;
-        --input: 0 0% 14.9%;
+        --border: 0 0% 20%;
+        --input: 0 0% 20%;
 
         --primary: 0 0% 98%;
         --primary-foreground: 0 0% 9%;
 
-        --secondary: 0 0% 14.9%;
+        --secondary: 0 0% 18%;
         --secondary-foreground: 0 0% 98%;
 
-        --accent: 0 0% 14.9%;
+        --accent: 0 0% 18%;
         --accent-foreground: 0 0% 98%;
 
-        --destructive: 0 62.8% 30.6%;
+        --destructive: 0 62.8% 50%;
         --destructive-foreground: 0 0% 98%;
 
         --ring: 0 0% 83.1%;
@@ -76,5 +76,39 @@
         @apply bg-background text-foreground;
         font-family: "Inter", sans-serif;
         min-height: 101vh;
+    }
+}
+
+@layer components {
+    /* Enhanced focus states for better accessibility */
+    .dark button:focus-visible,
+    .dark a:focus-visible,
+    .dark input:focus-visible,
+    .dark textarea:focus-visible {
+        outline: 2px solid hsl(var(--ring));
+        outline-offset: 2px;
+    }
+
+    /* Improved hover states for better visibility */
+    .dark button:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+
+    /* Better input visibility in dark mode */
+    .dark input,
+    .dark textarea {
+        background-color: hsl(var(--input));
+        border-color: hsl(var(--border));
+    }
+
+    .dark input:hover,
+    .dark textarea:hover {
+        border-color: hsl(var(--ring));
+    }
+
+    .dark input:focus,
+    .dark textarea:focus {
+        border-color: hsl(var(--ring));
+        background-color: hsl(0 0% 22%);
     }
 }

@@ -1,11 +1,32 @@
+import { useEffect, useState } from "react";
+
+const HELL_NO_GIFS = [
+    "https://media3.giphy.com/media/cf8wLYdRWjM6A/giphy.gif?cid=ecf05e47cxm4gtpsexiudbi68b1g7j8bghfn1j0sp9bi78di&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+    "https://media.giphy.com/media/STfLOU6iRBRunMciZv/giphy.gif",
+    "https://media.giphy.com/media/d10dMmzqCYqQ0/giphy.gif",
+    "https://media.giphy.com/media/xiMUwBRn5RDLhzwO80/giphy.gif",
+    "https://media.giphy.com/media/15aGGXfSlat2dP6ohs/giphy.gif",
+    "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjVidjJwMnRxM3pmMnU3cDB4M2c1ZTh1eGlodGlyZ3E3cHZtazUwMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OIBjJZHpzbcR2/giphy.gif"
+];
+
 const BlockedPage = () => {
+    const [gifUrl, setGifUrl] = useState<string>("");
+    const [imageError, setImageError] = useState(false);
+
+    useEffect(() => {
+        // Select a random GIF when the component mounts
+        const randomGif =
+            HELL_NO_GIFS[Math.floor(Math.random() * HELL_NO_GIFS.length)];
+        setGifUrl(randomGif);
+    }, []);
+
     return (
         <div className="container flex flex-col items-center justify-center h-screen">
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8 block">
                 Hell no!
             </h1>
 
-            <p className="text-lg text-gray-500 mb-1 text-center">
+            <p className="text-lg text-muted-foreground mb-1 text-center">
                 You've told me you don't want to see this page again. So I'm not
                 showing it to you.
             </p>
@@ -14,7 +35,16 @@ const BlockedPage = () => {
                 Sorry, not sorry.
             </p>
 
-            <img src="https://media3.giphy.com/media/cf8wLYdRWjM6A/giphy.gif?cid=ecf05e47cxm4gtpsexiudbi68b1g7j8bghfn1j0sp9bi78di&ep=v1_gifs_search&rid=giphy.gif&ct=g" />
+            {gifUrl && !imageError ? (
+                <img
+                    src={gifUrl}
+                    alt="Hell no!"
+                    className="max-w-full h-auto rounded-lg shadow-lg"
+                    onError={() => setImageError(true)}
+                />
+            ) : (
+                <div className="text-6xl">🚫</div>
+            )}
         </div>
     );
 };
