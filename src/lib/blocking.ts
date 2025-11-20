@@ -78,7 +78,7 @@ export const getSite = (
                 return normalizedBlockedHostName === normalizedHostName;
             }
 
-            return site.site == url;
+            return site.site === url;
         } catch (error) {
             // If the stored site URL is malformed, skip it
             console.warn(`Malformed site URL in storage: ${site.site}`, error);
@@ -189,7 +189,7 @@ export const isInSchedule = (
         }
     });
 
-    return schedule != undefined;
+    return schedule !== undefined;
 };
 
 /**
