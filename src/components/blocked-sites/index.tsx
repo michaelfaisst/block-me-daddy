@@ -17,6 +17,7 @@ import { Site } from "@/dto";
 import AnimatePresence from "../animate-presence";
 import AddSiteDialog from "./add-site";
 import EditSiteDialog from "./edit-site";
+import PresetSelector from "./preset-selector";
 
 const BlockedSites = () => {
     const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
@@ -41,6 +42,10 @@ const BlockedSites = () => {
                 return site;
             })
         );
+    };
+
+    const addPresetSites = (newSites: Site[]) => {
+        setSites([...sites, ...newSites]);
     };
 
     return (
@@ -104,7 +109,13 @@ const BlockedSites = () => {
                 ))}
             </div>
 
-            <AddSiteDialog />
+            <div className="flex gap-2">
+                <PresetSelector
+                    existingSites={sites}
+                    onPresetsSelected={addPresetSites}
+                />
+                <AddSiteDialog />
+            </div>
         </>
     );
 };

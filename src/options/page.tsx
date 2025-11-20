@@ -5,6 +5,7 @@ import Schedules from "@/components/schedule";
 
 import BlockedSites from "../components/blocked-sites";
 import AboutDialog from "../components/about-dialog";
+import ImportExport from "../components/import-export";
 import { ThemeToggle } from "../components/theme-toggle";
 import {
     Button,
@@ -32,6 +33,8 @@ const OptionsPage = () => {
                     Block me daddy
                 </h1>
                 <div className="flex flex-row items-center gap-2">
+                    <ImportExport />
+
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <Button

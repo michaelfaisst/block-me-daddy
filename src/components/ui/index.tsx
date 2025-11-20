@@ -5,6 +5,7 @@ export * from "./label";
 export * from "./form";
 export * from "./switch";
 export * from "./badge";
+export * from "./checkbox";
 export * from "./dropdown-menu";
 export * from "./tooltip";
 export * from "./alert";
