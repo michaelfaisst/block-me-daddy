@@ -38,9 +38,13 @@ const formSchema = z.object({
     exact: z.boolean()
 });
 
-const AddSiteDialog = () => {
+interface AddSiteDialogProps {
+    onSiteAdded: (site: Site) => void;
+}
+
+const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
     const [open, setOpen] = useState(false);
-    const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
+    const [sites] = useChromeStorageLocal<Site[]>("sites", []);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -61,10 +65,8 @@ const AddSiteDialog = () => {
             return;
         }
 
-        setSites([
-            ...sites,
-            { id: createId(), site: data.site, exact: data.exact }
-        ]);
+        const newSite = { id: createId(), site: data.site, exact: data.exact };
+        onSiteAdded(newSite);
         setOpen(false);
         form.reset();
     };

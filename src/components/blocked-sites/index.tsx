@@ -59,7 +59,19 @@ const BlockedSites = () => {
     };
 
     const addPresetSites = (newSites: Site[]) => {
-        setSites([...sites, ...newSites]);
+        const updatedSites = [...sites, ...newSites];
+        setSites(updatedSites);
+        // Jump to last page after adding sites
+        const newTotalPages = Math.ceil(updatedSites.length / itemsPerPage);
+        setCurrentPage(newTotalPages);
+    };
+
+    const addSite = (newSite: Site) => {
+        const updatedSites = [...sites, newSite];
+        setSites(updatedSites);
+        // Jump to last page after adding site
+        const newTotalPages = Math.ceil(updatedSites.length / itemsPerPage);
+        setCurrentPage(newTotalPages);
     };
 
     // Calculate pagination
@@ -128,7 +140,7 @@ const BlockedSites = () => {
                         existingSites={sites}
                         onPresetsSelected={addPresetSites}
                     />
-                    <AddSiteDialog />
+                    <AddSiteDialog onSiteAdded={addSite} />
                 </div>
             </div>
 
