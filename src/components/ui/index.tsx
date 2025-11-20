@@ -13,3 +13,5 @@ export * from "./alert-dialog";
 export * from "./card";
 export * from "./time-input";
 export * from "./scroll-area";
+export * from "./pagination";
+export * from "./select";

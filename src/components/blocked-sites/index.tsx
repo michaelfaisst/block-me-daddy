@@ -1,5 +1,6 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { LucideMegaphone, LucideTrash } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import {
@@ -8,9 +9,17 @@ import {
     AlertTitle,
     Badge,
     Button,
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
 } from "@/components/ui";
 import { Site } from "@/dto";
 
@@ -21,6 +30,8 @@ import PresetSelector from "./preset-selector";
 
 const BlockedSites = () => {
     const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [animationParent] = useAutoAnimate({
         duration: 150
     });
@@ -48,6 +59,55 @@ const BlockedSites = () => {
         setSites([...sites, ...newSites]);
     };
 
+    // Calculate pagination
+    const totalPages = Math.ceil(sites.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedSites = sites.slice(startIndex, endIndex);
+
+    // Reset to first page if current page is out of bounds
+    useEffect(() => {
+        if (currentPage > totalPages && totalPages > 0) {
+            setCurrentPage(1);
+        }
+    }, [currentPage, totalPages]);
+
+    // Generate page numbers to display
+    const getPageNumbers = () => {
+        const pages: (number | string)[] = [];
+        const maxPagesToShow = 5;
+
+        if (totalPages <= maxPagesToShow) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            if (currentPage <= 3) {
+                for (let i = 1; i <= 4; i++) {
+                    pages.push(i);
+                }
+                pages.push("...");
+                pages.push(totalPages);
+            } else if (currentPage >= totalPages - 2) {
+                pages.push(1);
+                pages.push("...");
+                for (let i = totalPages - 3; i <= totalPages; i++) {
+                    pages.push(i);
+                }
+            } else {
+                pages.push(1);
+                pages.push("...");
+                pages.push(currentPage - 1);
+                pages.push(currentPage);
+                pages.push(currentPage + 1);
+                pages.push("...");
+                pages.push(totalPages);
+            }
+        }
+
+        return pages;
+    };
+
     return (
         <>
             <p className="scroll-m-20 text-2xl font-bold tracking-tight mb-2">
@@ -70,11 +130,46 @@ const BlockedSites = () => {
                 </Alert>
             </AnimatePresence>
 
+            {sites.length > 0 && (
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            Show
+                        </span>
+                        <Select
+                            value={itemsPerPage.toString()}
+                            onValueChange={(value) => {
+                                setItemsPerPage(Number(value));
+                                setCurrentPage(1);
+                            }}
+                        >
+                            <SelectTrigger className="w-[70px]">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="5">5</SelectItem>
+                                <SelectItem value="10">10</SelectItem>
+                                <SelectItem value="25">25</SelectItem>
+                                <SelectItem value="50">50</SelectItem>
+                                <SelectItem value="100">100</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                            per page
+                        </span>
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {sites.length} {sites.length === 1 ? "site" : "sites"}{" "}
+                        total
+                    </div>
+                </div>
+            )}
+
             <div
                 className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800 mb-4"
                 ref={animationParent}
             >
-                {sites.map((site) => (
+                {paginatedSites.map((site) => (
                     <div
                         key={site.id}
                         className="py-3 flex flex-row justify-between items-center"
@@ -108,6 +203,64 @@ const BlockedSites = () => {
                     </div>
                 ))}
             </div>
+
+            {totalPages > 1 && (
+                <div className="mb-4">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        setCurrentPage((prev) =>
+                                            Math.max(1, prev - 1)
+                                        )
+                                    }
+                                    aria-disabled={currentPage === 1}
+                                    className={
+                                        currentPage === 1
+                                            ? "pointer-events-none opacity-50"
+                                            : "cursor-pointer"
+                                    }
+                                />
+                            </PaginationItem>
+
+                            {getPageNumbers().map((page, index) => (
+                                <PaginationItem key={index}>
+                                    {page === "..." ? (
+                                        <span className="px-4">...</span>
+                                    ) : (
+                                        <PaginationLink
+                                            onClick={() =>
+                                                setCurrentPage(page as number)
+                                            }
+                                            isActive={currentPage === page}
+                                            className="cursor-pointer"
+                                        >
+                                            {page}
+                                        </PaginationLink>
+                                    )}
+                                </PaginationItem>
+                            ))}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() =>
+                                        setCurrentPage((prev) =>
+                                            Math.min(totalPages, prev + 1)
+                                        )
+                                    }
+                                    aria-disabled={currentPage === totalPages}
+                                    className={
+                                        currentPage === totalPages
+                                            ? "pointer-events-none opacity-50"
+                                            : "cursor-pointer"
+                                    }
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
 
             <div className="flex gap-2">
                 <PresetSelector
