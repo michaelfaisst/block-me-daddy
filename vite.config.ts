@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig } from "vite";
 
-import manifest from "./manifest.json";
+import manifest from "./manifest.config";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,6 +18,9 @@ export default defineConfig({
         strictPort: true,
         hmr: {
             port: 5173
+        },
+        cors: {
+            origin: [/chrome-extension:\/\//]
         }
     },
     build: {

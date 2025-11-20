@@ -3,7 +3,9 @@ import { useChromeStorageLocal } from "use-chrome-storage";
 
 import Schedules from "@/components/schedule";
 
+import AboutDialog from "../components/about-dialog";
 import BlockedSites from "../components/blocked-sites";
+import ImportExport from "../components/import-export";
 import { ThemeToggle } from "../components/theme-toggle";
 import {
     Button,
@@ -31,8 +33,10 @@ const OptionsPage = () => {
                     Block me daddy
                 </h1>
                 <div className="flex flex-row items-center gap-2">
+                    <ImportExport />
+
                     <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger asChild>
                             <Button
                                 size="sm"
                                 variant="outline"
@@ -47,7 +51,7 @@ const OptionsPage = () => {
                     </Tooltip>
 
                     <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger asChild>
                             <ThemeToggle />
                         </TooltipTrigger>
                         <TooltipContent>Toggle theme</TooltipContent>
@@ -80,6 +84,12 @@ const OptionsPage = () => {
             <div className="">
                 <Schedules />
             </div>
+
+            <footer className="mt-16 pt-8 border-t">
+                <div className="flex justify-center">
+                    <AboutDialog />
+                </div>
+            </footer>
         </div>
     );
 };

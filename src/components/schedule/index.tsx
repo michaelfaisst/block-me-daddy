@@ -70,25 +70,25 @@ const Schedules = () => {
                 chosen.
             </p>
 
+            <Button className="mb-6" onClick={() => addNewSchedule()}>
+                <LucidePlus className="h-4 w-4 mr-2" />
+                Add schedule
+            </Button>
+
             <AnimatePresence visible={schedules.length === 0}>
                 <div className="pb-6">
                     <Alert>
                         <LucideMegaphone className="h-4 w-4 mr-4" />
                         <AlertTitle>You have no schedules yet!</AlertTitle>
                         <AlertDescription className="text-secondary-foreground">
-                            If you don't have any schedule, we will block the
-                            sites you chosen all the time (as long as blocking
-                            is enabled). To add a schedule, click the button
-                            below.
+                            If you don&apos;t have any schedule, we will block
+                            the sites you chosen all the time (as long as
+                            blocking is enabled). To add a schedule, click the
+                            button below.
                         </AlertDescription>
                     </Alert>
                 </div>
             </AnimatePresence>
-
-            <Button className="mb-6" onClick={() => addNewSchedule()}>
-                <LucidePlus className="h-4 w-4 mr-2" />
-                Add schedule
-            </Button>
 
             <div className="grid grid-cols-4 gap-4" ref={animationParent}>
                 {schedules.map((schedule) => (

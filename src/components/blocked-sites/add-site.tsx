@@ -1,12 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createId } from "@paralleldrive/cuid2";
-import { PlusIcon } from "lucide-react";
+import { InfoIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import * as z from "zod";
 
 import {
+    Alert,
+    AlertDescription,
     Button,
     Dialog,
     DialogContent,
@@ -26,26 +28,45 @@ import {
 import { Site } from "@/dto";
 
 const formSchema = z.object({
-    site: z.string().url(),
-    exact: z.boolean().default(false)
+    site: z
+        .string()
+        .min(1, "Site is required")
+        .regex(
+            /^(?!https?:\/\/)(?!www\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+            "Enter a domain without protocol or www (e.g., youtube.com)"
+        ),
+    exact: z.boolean()
 });
 
-const AddSiteDialog = () => {
+interface AddSiteDialogProps {
+    onSiteAdded: (site: Site) => void;
+}
+
+const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
     const [open, setOpen] = useState(false);
-    const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
+    const [sites] = useChromeStorageLocal<Site[]>("sites", []);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            site: ""
+            site: "",
+            exact: false
         }
     });
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
-        setSites([
-            ...sites,
-            { id: createId(), site: data.site, exact: data.exact }
-        ]);
+        // Check if site already exists
+        const isDuplicate = sites.some((s) => s.site === data.site);
+        if (isDuplicate) {
+            form.setError("site", {
+                type: "manual",
+                message: "This site has already been added"
+            });
+            return;
+        }
+
+        const newSite = { id: createId(), site: data.site, exact: data.exact };
+        onSiteAdded(newSite);
         setOpen(false);
         form.reset();
     };
@@ -65,6 +86,16 @@ const AddSiteDialog = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="space-y-4">
+                            <Alert>
+                                <InfoIcon className="h-4 w-4" />
+                                <AlertDescription>
+                                    Enter a domain without protocol or www
+                                    (e.g., youtube.com). Domains are matched
+                                    flexibly - blocking youtube.com will also
+                                    block www.youtube.com and
+                                    https://youtube.com.
+                                </AlertDescription>
+                            </Alert>
                             <FormField
                                 control={form.control}
                                 name="site"

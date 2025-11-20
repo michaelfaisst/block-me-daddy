@@ -1,10 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LucideEdit } from "lucide-react";
+import { InfoIcon, LucideEdit } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 import {
+    Alert,
+    AlertDescription,
     Button,
     Dialog,
     DialogContent,
@@ -25,16 +27,23 @@ import { Site } from "@/dto";
 
 const formSchema = z.object({
     id: z.string(),
-    site: z.string().url(),
-    exact: z.boolean().default(false)
+    site: z
+        .string()
+        .min(1, "Site is required")
+        .regex(
+            /^(?!https?:\/\/)(?!www\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+            "Enter a domain without protocol or www (e.g., youtube.com)"
+        ),
+    exact: z.boolean()
 });
 
 interface Props {
     site: Site;
+    sites: Site[];
     onSiteUpdated: (site: Site) => void;
 }
 
-const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
+const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
     const [open, setOpen] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -45,6 +54,19 @@ const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
     });
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
+        // Check if site already exists (excluding the current site being edited)
+        const isDuplicate = sites.some(
+            (s) => s.id !== site.id && s.site === data.site
+        );
+        if (isDuplicate) {
+            form.setError("site", {
+                type: "manual",
+                message: "This site has already been added"
+            });
+            return;
+        }
+
+        // Store the original user input without normalization
         onSiteUpdated(data);
         setOpen(false);
         form.reset(data);
@@ -52,7 +74,7 @@ const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <Button variant="ghost">
                     <LucideEdit size={16} />
                 </Button>
@@ -65,6 +87,16 @@ const EditSiteDialog = ({ site, onSiteUpdated }: Props) => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="space-y-4">
+                            <Alert>
+                                <InfoIcon className="h-4 w-4" />
+                                <AlertDescription>
+                                    Enter a domain without protocol or www
+                                    (e.g., youtube.com). Domains are matched
+                                    flexibly - blocking youtube.com will also
+                                    block www.youtube.com and
+                                    https://youtube.com.
+                                </AlertDescription>
+                            </Alert>
                             <FormField
                                 control={form.control}
                                 name="site"

@@ -1,81 +1,52 @@
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-
 import { Schedule, Site } from "@/dto";
+import { shouldBlockSite } from "@/lib/blocking";
+import { STORAGE_KEYS, URLS } from "@/lib/constants";
 
-dayjs.extend(customParseFormat);
-
+/**
+ * Opens the extension options page when the extension icon is clicked
+ */
 chrome.action.onClicked.addListener(() => {
     if (chrome.runtime.openOptionsPage) {
         chrome.runtime.openOptionsPage();
     } else {
-        window.open(chrome.runtime.getURL("options.html"));
+        window.open(chrome.runtime.getURL(URLS.OPTIONS_PAGE));
     }
 });
 
-const getSite = async (url?: string) => {
-    const hostName = url ? new URL(url).hostname : null;
-    if (!hostName) return;
-
-    const siteSettings = (await chrome.storage.local.get("sites")) as {
-        sites: Site[];
-    };
-
-    if (!siteSettings.sites) return;
-
-    const site = siteSettings.sites.find((site) => {
-        const blockedURL = new URL(site.site);
-
-        if (!site.exact) {
-            return blockedURL.hostname == hostName;
-        }
-
-        return site.site == url;
-    });
-
-    return site;
-};
-
-const isInSchedule = async () => {
-    const schedulesSettings = (await chrome.storage.local.get("schedules")) as {
-        schedules: Schedule[];
-    };
-
-    const { schedules } = schedulesSettings;
-
-    if (!schedules || schedules.length === 0) {
-        return true;
-    }
-
-    const now = dayjs();
-    const weekDay = now.get("day");
-
-    const schedule = schedules.find((schedule) => {
-        if (!schedule.weekDays.includes(weekDay)) {
-            return false;
-        }
-
-        const startTime = dayjs(schedule.timeFrom, "HH:mm");
-        const endTime = dayjs(schedule.timeTo, "HH:mm");
-
-        return now.isAfter(startTime) && now.isBefore(endTime);
-    });
-
-    return schedule != undefined;
-};
-
+/**
+ * Monitors tab updates and blocks sites based on user configuration
+ * Optimized with early returns and batched storage reads
+ */
 chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
+    // Early return: tab ID must exist
     if (tab.id == undefined) return;
 
     const url = changeInfo.url || tab.pendingUrl || tab.url;
 
-    const enabledSettings = await chrome.storage.local.get("enabled");
-    if (!enabledSettings.enabled) return;
+    if (!url || url.includes(URLS.BLOCKED_PAGE)) return;
 
-    const site = await getSite(url);
-    const inSchedule = await isInSchedule();
+    const storage = await chrome.storage.local.get([
+        STORAGE_KEYS.ENABLED,
+        STORAGE_KEYS.SITES,
+        STORAGE_KEYS.SCHEDULES
+    ]);
 
-    if (site && inSchedule) {
-        chrome.tabs.update(tab.id, { url: "blocked.html" });
+    if (storage[STORAGE_KEYS.ENABLED] === false) return;
+
+    const shouldBlock = shouldBlockSite(
+        url,
+        (storage[STORAGE_KEYS.SITES] as Site[]) || [],
+        (storage[STORAGE_KEYS.SCHEDULES] as Schedule[]) || [],
+        storage[STORAGE_KEYS.ENABLED] !== false
+    );
+
+    console.log("Blocking check:", {
+        url,
+        shouldBlock,
+        enabled: storage[STORAGE_KEYS.ENABLED]
+    });
+
+    if (shouldBlock) {
+        chrome.tabs.update(tab.id, { url: URLS.BLOCKED_PAGE });
     }
 });
