@@ -3,7 +3,12 @@ import { useRef } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import { z } from "zod";
 
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
+import {
+    Button,
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger
+} from "@/components/ui";
 import { Schedule, Site, scheduleSchema, siteSchema } from "@/dto";
 
 const exportSchema = z.object({
@@ -94,9 +99,7 @@ const ImportExport = () => {
                         <LucideDownload size={16} />
                     </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                    Export sites and schedules
-                </TooltipContent>
+                <TooltipContent>Export sites and schedules</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -105,9 +108,7 @@ const ImportExport = () => {
                         <LucideUpload size={16} />
                     </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                    Import sites and schedules
-                </TooltipContent>
+                <TooltipContent>Import sites and schedules</TooltipContent>
             </Tooltip>
         </div>
     );

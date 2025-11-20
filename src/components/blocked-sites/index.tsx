@@ -31,7 +31,10 @@ import PresetSelector from "./preset-selector";
 const BlockedSites = () => {
     const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useChromeStorageLocal<number>("itemsPerPage", 10);
+    const [itemsPerPage, setItemsPerPage] = useChromeStorageLocal<number>(
+        "itemsPerPage",
+        10
+    );
     const [animationParent] = useAutoAnimate({
         duration: 150
     });
@@ -142,7 +145,7 @@ const BlockedSites = () => {
             </AnimatePresence>
 
             {sites.length > 0 && (
-            <div className="flex items-center justify-between gap-8 mb-4">
+                <div className="flex items-center justify-between gap-8 mb-4">
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                             Show

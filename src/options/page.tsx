@@ -3,8 +3,8 @@ import { useChromeStorageLocal } from "use-chrome-storage";
 
 import Schedules from "@/components/schedule";
 
-import BlockedSites from "../components/blocked-sites";
 import AboutDialog from "../components/about-dialog";
+import BlockedSites from "../components/blocked-sites";
 import ImportExport from "../components/import-export";
 import { ThemeToggle } from "../components/theme-toggle";
 import {

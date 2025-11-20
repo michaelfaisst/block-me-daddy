@@ -27,13 +27,16 @@ import { Site } from "@/dto";
 
 const formSchema = z.object({
     id: z.string(),
-    site: z.string().min(1, "Site is required").refine((value) => {
-        // Allow domain names with or without protocol
-        const domainPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
-        const urlPattern = /^https?:\/\//;
-        
-        return domainPattern.test(value) || urlPattern.test(value);
-    }, "Please enter a valid domain (e.g., youtube.com)"),
+    site: z
+        .string()
+        .min(1, "Site is required")
+        .refine((value) => {
+            // Allow domain names with or without protocol
+            const domainPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
+            const urlPattern = /^https?:\/\//;
+
+            return domainPattern.test(value) || urlPattern.test(value);
+        }, "Please enter a valid domain (e.g., youtube.com)"),
     exact: z.boolean()
 });
 
@@ -55,7 +58,9 @@ const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
         // Check if site already exists (excluding the current site being edited)
-        const isDuplicate = sites.some(s => s.id !== site.id && s.site === data.site);
+        const isDuplicate = sites.some(
+            (s) => s.id !== site.id && s.site === data.site
+        );
         if (isDuplicate) {
             form.setError("site", {
                 type: "manual",
@@ -88,8 +93,11 @@ const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
                             <Alert>
                                 <InfoIcon className="h-4 w-4" />
                                 <AlertDescription>
-                                    Enter a domain without protocol or www (e.g., youtube.com). 
-                                    Domains are matched flexibly - blocking youtube.com will also block www.youtube.com and https://youtube.com.
+                                    Enter a domain without protocol or www
+                                    (e.g., youtube.com). Domains are matched
+                                    flexibly - blocking youtube.com will also
+                                    block www.youtube.com and
+                                    https://youtube.com.
                                 </AlertDescription>
                             </Alert>
                             <FormField

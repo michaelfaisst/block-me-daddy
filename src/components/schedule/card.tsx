@@ -74,7 +74,9 @@ const ScheduleCard = ({ schedule, onChange, onRemove }: Props) => {
                             )}
                         />
 
-                        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block">Time</label>
+                        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-1 block">
+                            Time
+                        </label>
 
                         <div className="mt-1">
                             {editMode ? (

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { LucidePlus } from "lucide-react";
 import { createId } from "@paralleldrive/cuid2";
+import { LucidePlus } from "lucide-react";
+import { useState } from "react";
 
 import {
     Button,
@@ -143,7 +143,9 @@ const PresetSelector = ({
                                                     checked={selectedSites.has(
                                                         site
                                                     )}
-                                                    onCheckedChange={(checked) =>
+                                                    onCheckedChange={(
+                                                        checked
+                                                    ) =>
                                                         handleSiteToggle(
                                                             site,
                                                             !!checked

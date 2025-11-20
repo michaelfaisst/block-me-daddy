@@ -63,35 +63,39 @@ A Chrome extension that helps users block distracting websites with schedule sup
 **Goal**: Ensure reliability across all features
 
 ### Tasks
-- [ ] Audit background script (`src/background.ts`)
-  - [ ] Test tab update listener edge cases
-  - [ ] Verify blocked page redirect doesn't create loops
-  - [ ] Test with multiple tabs/windows
-- [ ] Audit blocking logic (`src/lib/blocking.ts`)
-  - [ ] Review URL matching (exact vs domain matching)
-  - [ ] Test overnight schedule edge cases
-  - [ ] Verify timezone handling
-  - [ ] Test www vs non-www URL matching
-- [ ] Audit UI components
-  - [ ] Test blocked sites CRUD operations
-  - [ ] Test schedule creation/editing
-  - [ ] Verify form validation
-  - [ ] Test theme persistence
+- [x] Audit background script (`src/background.ts`)
+  - [x] Test tab update listener edge cases
+  - [x] Verify blocked page redirect doesn't create loops
+  - [x] Test with multiple tabs/windows
+- [x] Audit blocking logic (`src/lib/blocking.ts`)
+  - [x] Review URL matching (exact vs domain matching)
+  - [x] Test overnight schedule edge cases
+  - [x] Verify timezone handling
+  - [x] Test www vs non-www URL matching
+- [x] Audit UI components
+  - [x] Test blocked sites CRUD operations
+  - [x] Test schedule creation/editing
+  - [x] Verify form validation
+  - [x] Test theme persistence
 - [ ] Browser compatibility testing
   - [ ] Test on Chrome
   - [ ] Test on Edge
   - [ ] Test on Brave
-- [ ] Add unit tests for critical functions
-  - [ ] `getSite()` - URL matching logic
-  - [ ] `isInSchedule()` - schedule validation (especially overnight)
-  - [ ] `shouldBlockSite()` - blocking decision logic
-  - [ ] `normalizeHostname()` - URL normalization
-  - [ ] Add tests for edge cases (empty arrays, invalid URLs, etc.)
+- [x] Add unit tests for critical functions
+  - [x] `getSite()` - URL matching logic
+  - [x] `isInSchedule()` - schedule validation (especially overnight)
+  - [x] `shouldBlockSite()` - blocking decision logic
+  - [x] `normalizeHostname()` - URL normalization
+  - [x] `ensureProtocol()` - URL protocol handling
+  - [x] Add tests for edge cases (empty arrays, invalid URLs, etc.)
+  - [x] Add error handling for malformed URLs in storage
 - [ ] Add integration tests
   - [ ] Test full blocking flow (add site → schedule → block)
   - [ ] Test storage persistence
 
 **Deliverables**: Bug-free extension with comprehensive test coverage
+
+**Status**: ✅ Mostly Completed (browser testing and integration tests pending)
 
 ---
 

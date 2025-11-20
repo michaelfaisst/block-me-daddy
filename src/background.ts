@@ -14,6 +14,9 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
 
     const url = changeInfo.url || tab.pendingUrl || tab.url;
 
+    // Prevent redirect loop - don't block if already on the blocked page
+    if (url?.includes("blocked.html")) return;
+
     const enabledSettings = await chrome.storage.local.get("enabled");
     const siteSettings = (await chrome.storage.local.get("sites")) as {
         sites: Site[];

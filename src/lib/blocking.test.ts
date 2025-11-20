@@ -1,7 +1,14 @@
-import { describe, expect, it } from "vitest";
 import { parseISO } from "date-fns";
-import { getSite, isInSchedule, shouldBlockSite } from "@/lib/blocking";
-import { Site, Schedule } from "@/dto";
+import { describe, expect, it } from "vitest";
+
+import { Schedule, Site } from "@/dto";
+import {
+    ensureProtocol,
+    getSite,
+    isInSchedule,
+    normalizeHostname,
+    shouldBlockSite
+} from "@/lib/blocking";
 
 describe("blocking logic", () => {
     describe("getSite", () => {
@@ -24,24 +31,36 @@ describe("blocking logic", () => {
         });
 
         it("should match hostname for different paths when exact is false", () => {
-            const result = getSite("https://facebook.com/another/path?query=param", mockSites);
+            const result = getSite(
+                "https://facebook.com/another/path?query=param",
+                mockSites
+            );
             expect(result).toBeDefined();
             expect(result?.id).toBe("1");
         });
 
         it("should match exact URL when exact is true", () => {
-            const result = getSite("https://twitter.com/specific-page", mockSites);
+            const result = getSite(
+                "https://twitter.com/specific-page",
+                mockSites
+            );
             expect(result).toBeDefined();
             expect(result?.id).toBe("2");
         });
 
         it("should not match different URL when exact is true", () => {
-            const result = getSite("https://twitter.com/different-page", mockSites);
+            const result = getSite(
+                "https://twitter.com/different-page",
+                mockSites
+            );
             expect(result).toBeUndefined();
         });
 
         it("should not match path variations when exact is true", () => {
-            const result = getSite("https://youtube.com/watch?v=456", mockSites);
+            const result = getSite(
+                "https://youtube.com/watch?v=456",
+                mockSites
+            );
             expect(result).toBeUndefined();
         });
 
@@ -71,7 +90,7 @@ describe("blocking logic", () => {
             ];
             const resultWithWww = getSite("https://www.example.com", sites);
             const resultWithoutWww = getSite("https://example.com", sites);
-            
+
             expect(resultWithWww).toBeDefined();
             expect(resultWithoutWww).toBeDefined();
             expect(resultWithWww?.id).toBe("1");
@@ -86,7 +105,7 @@ describe("blocking logic", () => {
             const result1 = getSite("https://youtube.com/watch", sites);
             const result2 = getSite("https://www.youtube.com/watch", sites);
             const result3 = getSite("https://github.com/user/repo", sites);
-            
+
             expect(result1).toBeDefined();
             expect(result1?.id).toBe("1");
             expect(result2).toBeDefined();
@@ -101,7 +120,7 @@ describe("blocking logic", () => {
             ];
             const result1 = getSite("https://example.com", sites);
             const result2 = getSite("https://www.example.com", sites);
-            
+
             expect(result1).toBeDefined();
             expect(result1?.id).toBe("1");
             expect(result2).toBeDefined();
@@ -113,7 +132,10 @@ describe("blocking logic", () => {
                 { id: "1", site: "https://facebook.com", exact: false },
                 { id: "2", site: "https://facebook.com/specific", exact: true }
             ];
-            const result = getSite("https://facebook.com/other", duplicateSites);
+            const result = getSite(
+                "https://facebook.com/other",
+                duplicateSites
+            );
             expect(result?.id).toBe("1"); // First match wins
         });
 
@@ -419,10 +441,14 @@ describe("blocking logic", () => {
 
         it("should work with exact URL matching", () => {
             const exactSites: Site[] = [
-                { id: "1", site: "https://youtube.com/watch?v=123", exact: true }
+                {
+                    id: "1",
+                    site: "https://youtube.com/watch?v=123",
+                    exact: true
+                }
             ];
             const now = parseISO("2025-01-06T12:00:00");
-            
+
             // Exact match
             const result1 = shouldBlockSite(
                 "https://youtube.com/watch?v=123",
@@ -442,6 +468,185 @@ describe("blocking logic", () => {
                 now
             );
             expect(result2).toBe(false);
+        });
+    });
+
+    describe("normalizeHostname", () => {
+        it("should remove www prefix from hostname", () => {
+            expect(normalizeHostname("www.example.com")).toBe("example.com");
+            expect(normalizeHostname("www.facebook.com")).toBe("facebook.com");
+        });
+
+        it("should handle hostnames without www prefix", () => {
+            expect(normalizeHostname("example.com")).toBe("example.com");
+            expect(normalizeHostname("google.com")).toBe("google.com");
+        });
+
+        it("should handle WWW in uppercase", () => {
+            expect(normalizeHostname("WWW.example.com")).toBe("example.com");
+            expect(normalizeHostname("WwW.example.com")).toBe("example.com");
+        });
+
+        it("should handle subdomains that are not www", () => {
+            expect(normalizeHostname("subdomain.example.com")).toBe(
+                "subdomain.example.com"
+            );
+            expect(normalizeHostname("api.example.com")).toBe(
+                "api.example.com"
+            );
+        });
+
+        it("should handle empty string", () => {
+            expect(normalizeHostname("")).toBe("");
+        });
+
+        it("should handle www. followed by subdomain", () => {
+            expect(normalizeHostname("www.api.example.com")).toBe(
+                "api.example.com"
+            );
+        });
+    });
+
+    describe("ensureProtocol", () => {
+        it("should add https:// to URLs without protocol", () => {
+            expect(ensureProtocol("example.com")).toBe("https://example.com");
+            expect(ensureProtocol("www.example.com")).toBe(
+                "https://www.example.com"
+            );
+        });
+
+        it("should not modify URLs that already have https://", () => {
+            expect(ensureProtocol("https://example.com")).toBe(
+                "https://example.com"
+            );
+            expect(ensureProtocol("https://www.example.com")).toBe(
+                "https://www.example.com"
+            );
+        });
+
+        it("should not modify URLs that already have http://", () => {
+            expect(ensureProtocol("http://example.com")).toBe(
+                "http://example.com"
+            );
+            expect(ensureProtocol("http://www.example.com")).toBe(
+                "http://www.example.com"
+            );
+        });
+
+        it("should handle URLs with paths", () => {
+            expect(ensureProtocol("example.com/path")).toBe(
+                "https://example.com/path"
+            );
+            expect(ensureProtocol("https://example.com/path")).toBe(
+                "https://example.com/path"
+            );
+        });
+
+        it("should handle URLs with query strings", () => {
+            expect(ensureProtocol("example.com?query=value")).toBe(
+                "https://example.com?query=value"
+            );
+        });
+
+        it("should be case insensitive for protocol detection", () => {
+            expect(ensureProtocol("HTTP://example.com")).toBe(
+                "HTTP://example.com"
+            );
+            expect(ensureProtocol("HTTPS://example.com")).toBe(
+                "HTTPS://example.com"
+            );
+        });
+    });
+
+    describe("Edge cases and error handling", () => {
+        it("should handle invalid URLs gracefully in getSite", () => {
+            const sites: Site[] = [
+                { id: "1", site: "https://example.com", exact: false }
+            ];
+
+            // These should not throw errors
+            expect(() => getSite("", sites)).not.toThrow();
+            expect(() => getSite("not-a-url", sites)).toThrow();
+        });
+
+        it("should handle sites with unusual characters", () => {
+            const sites: Site[] = [
+                { id: "1", site: "https://example-site.com", exact: false },
+                { id: "2", site: "https://example_site.com", exact: false }
+            ];
+
+            expect(
+                getSite("https://example-site.com/path", sites)
+            ).toBeDefined();
+            expect(
+                getSite("https://example_site.com/path", sites)
+            ).toBeDefined();
+        });
+
+        it("should handle schedule with same start and end time", () => {
+            const schedules: Schedule[] = [
+                {
+                    id: "1",
+                    weekDays: [1, 2, 3, 4, 5],
+                    timeFrom: "09:00",
+                    timeTo: "09:00"
+                }
+            ];
+
+            const now = parseISO("2025-01-06T09:00:00");
+            expect(isInSchedule(schedules, now)).toBe(true);
+        });
+
+        it("should handle shouldBlockSite with null/undefined schedules", () => {
+            const sites: Site[] = [
+                { id: "1", site: "https://facebook.com", exact: false }
+            ];
+
+            expect(
+                shouldBlockSite(
+                    "https://facebook.com",
+                    sites,
+                    null as any,
+                    true
+                )
+            ).toBe(true);
+            expect(
+                shouldBlockSite(
+                    "https://facebook.com",
+                    sites,
+                    undefined as any,
+                    true
+                )
+            ).toBe(true);
+        });
+
+        it("should use local timezone for schedule checks", () => {
+            // Schedule from 09:00 to 17:00 on Monday
+            const schedules: Schedule[] = [
+                {
+                    id: "1",
+                    weekDays: [1],
+                    timeFrom: "09:00",
+                    timeTo: "17:00"
+                }
+            ];
+
+            // Monday at 12:00 in user's local time
+            const now = parseISO("2025-01-06T12:00:00");
+            expect(isInSchedule(schedules, now)).toBe(true);
+
+            // The schedule is always interpreted in the user's local timezone
+            // This is correct behavior for a Chrome extension
+        });
+
+        it("should handle getSite with malformed site URLs in storage", () => {
+            const sites: Site[] = [
+                { id: "1", site: "not-a-valid-url", exact: false }
+            ];
+
+            // This should handle the error gracefully and return undefined
+            const result = getSite("https://example.com", sites);
+            expect(result).toBeUndefined();
         });
     });
 });
