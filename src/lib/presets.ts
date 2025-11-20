@@ -1,9 +1,16 @@
+/**
+ * Represents a category of preset sites for quick blocking
+ */
 export interface PresetCategory {
     id: string;
     name: string;
     sites: string[];
 }
 
+/**
+ * Predefined categories of commonly blocked websites
+ * Users can quickly add these sites instead of typing them manually
+ */
 export const PRESET_CATEGORIES: PresetCategory[] = [
     {
         id: "social-media",

@@ -26,3 +26,17 @@
 - Main logic: `src/lib/blocking.ts` (site matching, schedule checking)
 - Components: `src/components/` (blocked-sites, schedule, ui)
 - Test coverage required for core blocking logic
+
+## Changelog
+
+- Keep a detailed changelog in `CHANGELOG.md` for all significant changes
+- Follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format
+- Include version numbers, dates, and descriptions of changes
+- Update changelog with each release or major update
+
+## Committing
+
+- Use clear, descriptive commit messages
+- Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format
+- Always check tests pass before committing
+- Run `bun run prettify` to ensure code is formatted before committing
