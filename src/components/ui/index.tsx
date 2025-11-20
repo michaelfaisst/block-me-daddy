@@ -12,3 +12,4 @@ export * from "./alert";
 export * from "./alert-dialog";
 export * from "./card";
 export * from "./time-input";
+export * from "./scroll-area";

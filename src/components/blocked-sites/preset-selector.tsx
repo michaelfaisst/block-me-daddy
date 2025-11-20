@@ -10,7 +10,8 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
+    ScrollArea
 } from "@/components/ui";
 import { Site } from "@/dto";
 import { PRESET_CATEGORIES } from "@/lib/presets";
@@ -91,7 +92,7 @@ const PresetSelector = ({
                     Quick Add
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col gap-4">
                 <DialogHeader>
                     <DialogTitle>Quick Add Preset Sites</DialogTitle>
                     <DialogDescription>
@@ -100,72 +101,74 @@ const PresetSelector = ({
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="space-y-6 py-4">
-                    {PRESET_CATEGORIES.map((category) => (
-                        <div key={category.id} className="space-y-3">
-                            <div className="flex items-center space-x-2">
-                                <Checkbox
-                                    id={`category-${category.id}`}
-                                    checked={isCategoryChecked(category.id)}
-                                    onCheckedChange={(checked) =>
-                                        handleCategoryToggle(
-                                            category.id,
-                                            !!checked
-                                        )
-                                    }
-                                />
-                                <label
-                                    htmlFor={`category-${category.id}`}
-                                    className="text-sm font-semibold cursor-pointer"
-                                >
-                                    {category.name}
-                                </label>
-                            </div>
+                <ScrollArea className="h-[50vh] pr-4">
+                    <div className="space-y-6">
+                        {PRESET_CATEGORIES.map((category) => (
+                            <div key={category.id} className="space-y-3">
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id={`category-${category.id}`}
+                                        checked={isCategoryChecked(category.id)}
+                                        onCheckedChange={(checked) =>
+                                            handleCategoryToggle(
+                                                category.id,
+                                                !!checked
+                                            )
+                                        }
+                                    />
+                                    <label
+                                        htmlFor={`category-${category.id}`}
+                                        className="text-sm font-semibold cursor-pointer"
+                                    >
+                                        {category.name}
+                                    </label>
+                                </div>
 
-                            <div className="ml-6 grid grid-cols-2 gap-2">
-                                {category.sites.map((site) => {
-                                    const alreadyExists =
-                                        existingSites.some(
-                                            (s) =>
-                                                s.site.toLowerCase() ===
-                                                site.toLowerCase()
-                                        );
+                                <div className="ml-6 grid grid-cols-2 gap-2">
+                                    {category.sites.map((site) => {
+                                        const alreadyExists =
+                                            existingSites.some(
+                                                (s) =>
+                                                    s.site.toLowerCase() ===
+                                                    site.toLowerCase()
+                                            );
 
-                                    return (
-                                        <div
-                                            key={site}
-                                            className="flex items-center space-x-2"
-                                        >
-                                            <Checkbox
-                                                id={`site-${site}`}
-                                                checked={selectedSites.has(
-                                                    site
-                                                )}
-                                                onCheckedChange={(checked) =>
-                                                    handleSiteToggle(
-                                                        site,
-                                                        !!checked
-                                                    )
-                                                }
-                                                disabled={alreadyExists}
-                                            />
-                                            <label
-                                                htmlFor={`site-${site}`}
-                                                className={`text-sm cursor-pointer ${
-                                                    alreadyExists
-                                                        ? "text-gray-400 line-through"
-                                                        : ""
-                                                }`}
+                                        return (
+                                            <div
+                                                key={site}
+                                                className="flex items-center space-x-2"
                                             >
-                                                {site}
-                                            </label>
-                                        </div>
-                                    );
-                                })}
+                                                <Checkbox
+                                                    id={`site-${site}`}
+                                                    checked={selectedSites.has(
+                                                        site
+                                                    )}
+                                                    onCheckedChange={(checked) =>
+                                                        handleSiteToggle(
+                                                            site,
+                                                            !!checked
+                                                        )
+                                                    }
+                                                    disabled={alreadyExists}
+                                                />
+                                                <label
+                                                    htmlFor={`site-${site}`}
+                                                    className={`text-sm cursor-pointer ${
+                                                        alreadyExists
+                                                            ? "text-gray-400 line-through"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    {site}
+                                                </label>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                </ScrollArea>
 
                 <div className="flex justify-between items-center pt-4 border-t">
                     <p className="text-sm text-gray-500">
