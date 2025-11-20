@@ -4,6 +4,7 @@ import { useChromeStorageLocal } from "use-chrome-storage";
 import Schedules from "@/components/schedule";
 
 import BlockedSites from "../components/blocked-sites";
+import AboutDialog from "../components/about-dialog";
 import { ThemeToggle } from "../components/theme-toggle";
 import {
     Button,
@@ -80,6 +81,12 @@ const OptionsPage = () => {
             <div className="">
                 <Schedules />
             </div>
+
+            <footer className="mt-16 pt-8 border-t">
+                <div className="flex justify-center">
+                    <AboutDialog />
+                </div>
+            </footer>
         </div>
     );
 };

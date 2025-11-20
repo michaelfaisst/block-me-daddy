@@ -78,37 +78,3 @@
         min-height: 101vh;
     }
 }
-
-@layer components {
-    /* Enhanced focus states for better accessibility */
-    .dark button:focus-visible,
-    .dark a:focus-visible,
-    .dark input:focus-visible,
-    .dark textarea:focus-visible {
-        outline: 2px solid hsl(var(--ring));
-        outline-offset: 2px;
-    }
-
-    /* Improved hover states for better visibility */
-    .dark button:hover:not(:disabled) {
-        opacity: 0.9;
-    }
-
-    /* Better input visibility in dark mode */
-    .dark input,
-    .dark textarea {
-        background-color: hsl(var(--input));
-        border-color: hsl(var(--border));
-    }
-
-    .dark input:hover,
-    .dark textarea:hover {
-        border-color: hsl(var(--ring));
-    }
-
-    .dark input:focus,
-    .dark textarea:focus {
-        border-color: hsl(var(--ring));
-        background-color: hsl(0 0% 22%);
-    }
-}
