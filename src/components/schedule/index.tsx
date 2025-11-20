@@ -70,6 +70,11 @@ const Schedules = () => {
                 chosen.
             </p>
 
+            <Button className="mb-6" onClick={() => addNewSchedule()}>
+                <LucidePlus className="h-4 w-4 mr-2" />
+                Add schedule
+            </Button>
+
             <AnimatePresence visible={schedules.length === 0}>
                 <div className="pb-6">
                     <Alert>
@@ -84,11 +89,6 @@ const Schedules = () => {
                     </Alert>
                 </div>
             </AnimatePresence>
-
-            <Button className="mb-6" onClick={() => addNewSchedule()}>
-                <LucidePlus className="h-4 w-4 mr-2" />
-                Add schedule
-            </Button>
 
             <div className="grid grid-cols-4 gap-4" ref={animationParent}>
                 {schedules.map((schedule) => (

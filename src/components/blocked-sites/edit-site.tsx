@@ -30,13 +30,10 @@ const formSchema = z.object({
     site: z
         .string()
         .min(1, "Site is required")
-        .refine((value) => {
-            // Allow domain names with or without protocol
-            const domainPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/;
-            const urlPattern = /^https?:\/\//;
-
-            return domainPattern.test(value) || urlPattern.test(value);
-        }, "Please enter a valid domain (e.g., youtube.com)"),
+        .regex(
+            /^(?!https?:\/\/)(?!www\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+            "Enter a domain without protocol or www (e.g., youtube.com)"
+        ),
     exact: z.boolean()
 });
 

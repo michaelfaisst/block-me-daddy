@@ -183,10 +183,6 @@ A Chrome extension that helps users block distracting websites with schedule sup
 
 - [ ] User experience enhancements
     - [ ] Add onboarding flow for first-time users
-    - [ ] Add empty states with helpful messages
-    - [ ] Add loading states for async operations
-    - [ ] Add success/error toast notifications
-    - [ ] Improve error messages (user-friendly)
 - [ ] Extension store preparation
     - [ ] Create promotional images (1280x800, 640x400, etc.)
     - [ ] Write compelling store description
@@ -222,10 +218,10 @@ A Chrome extension that helps users block distracting websites with schedule sup
 
 ### Technical Improvements
 
-- [ ] Add CI/CD pipeline (GitHub Actions)
-    - [ ] Automated testing on PR
-    - [ ] Automated builds
-    - [ ] Automated releases
+- [x] Add CI/CD pipeline (GitHub Actions)
+    - [x] Automated testing on PR
+    - [x] Automated builds
+    - [x] Automated releases
 - [x] Add linting (ESLint)
 - [x] Add commit hooks (Husky + lint-staged)
 - [ ] Set up Dependabot for dependency updates
