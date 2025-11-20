@@ -226,8 +226,8 @@ A Chrome extension that helps users block distracting websites with schedule sup
     - [ ] Automated testing on PR
     - [ ] Automated builds
     - [ ] Automated releases
-- [ ] Add linting (ESLint)
-- [ ] Add commit hooks (Husky + lint-staged)
+- [x] Add linting (ESLint)
+- [x] Add commit hooks (Husky + lint-staged)
 - [ ] Set up Dependabot for dependency updates
 
 ---

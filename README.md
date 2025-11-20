@@ -1,6 +1,6 @@
 # Block Me Daddy
 
-A Chrome extension that helps you stay focused by blocking distracting websites based on customizable schedules.
+A browser extension for Chromium-based browsers (Chrome, Edge, Brave, Opera) that helps you stay focused by blocking distracting websites based on customizable schedules.
 
 ## Features
 
@@ -20,16 +20,20 @@ A Chrome extension that helps you stay focused by blocking distracting websites 
 
 ## Installation
 
-### For Users (Chrome Web Store)
+### For Users (Extension Stores)
 
-_Coming soon - extension will be published to Chrome Web Store_
+_Coming soon - extension will be published to browser extension stores_
+
+- Chrome Web Store
+- Microsoft Edge Add-ons
+- Opera Add-ons
 
 ### For Developers
 
 #### Prerequisites
 
 - [Bun](https://bun.sh/) v1.0.0 or higher (or Node.js v18+)
-- Chrome, Edge, or Brave browser
+- A Chromium-based browser (Chrome, Edge, Brave, Opera, etc.)
 
 #### Setup
 
@@ -52,8 +56,13 @@ bun install
 bun run build
 ```
 
-4. Load the extension in Chrome:
-    - Open Chrome and navigate to `chrome://extensions/`
+4. Load the extension in your browser:
+
+    **Chrome/Edge/Brave:**
+    - Open your browser and navigate to the extensions page:
+        - Chrome: `chrome://extensions/`
+        - Edge: `edge://extensions/`
+        - Brave: `brave://extensions/`
     - Enable "Developer mode" (toggle in top-right corner)
     - Click "Load unpacked"
     - Select the `dist` folder from the project directory
@@ -125,17 +134,17 @@ block-me-daddy/
 │   └── blocked/
 │       └── page.tsx            # Blocked page with GIFs
 ├── assets/                     # Extension icons
-├── manifest.config.ts          # Chrome extension manifest
+├── manifest.config.ts          # Extension manifest (Manifest V3)
 └── vite.config.ts              # Vite build configuration
 ```
 
 ### Tech Stack
 
 - **Framework**: React 18 + TypeScript (strict mode)
-- **Build Tool**: Vite 6 + @crxjs/vite-plugin
+- **Build Tool**: Vite 6 + @crxjs/vite-plugin (cross-browser extension support)
 - **UI Library**: Radix UI + Tailwind CSS + shadcn/ui
 - **Form Handling**: react-hook-form + Zod
-- **Storage**: Chrome Storage API via use-chrome-storage
+- **Storage**: WebExtensions Storage API via use-chrome-storage
 - **Testing**: Vitest + happy-dom
 - **Code Quality**: Prettier + Husky + lint-staged
 
@@ -169,6 +178,51 @@ bun run test:coverage
 
 **Test Coverage**: 52 tests covering all blocking logic, including edge cases for overnight schedules, URL normalization, and invalid inputs.
 
+### CI/CD
+
+This project uses GitHub Actions for continuous integration and automated releases:
+
+- **CI Pipeline**: Runs on every PR and push to `main`/`develop`
+    - Linting with ESLint
+    - Code formatting checks with Prettier
+    - Full test suite execution
+    - Production build validation
+    - Build artifacts uploaded (retained for 7 days)
+
+- **Release Pipeline**: Automatically triggered on version tags
+
+#### Creating a Release
+
+1. Update the version in `package.json`:
+
+```bash
+# Update version number manually in package.json
+```
+
+2. Commit the version change:
+
+```bash
+git add package.json
+git commit -m "chore: bump version to 1.0.0"
+```
+
+3. Create and push a version tag:
+
+```bash
+git tag v1.0.0
+git push origin main
+git push origin v1.0.0
+```
+
+4. GitHub Actions will automatically:
+    - Run all tests
+    - Build the production extension
+    - Create a ZIP file (`block-me-daddy-v1.0.0.zip`)
+    - Create a GitHub Release with auto-generated release notes
+    - Attach the ZIP file to the release
+
+5. Download the ZIP from the GitHub Release and upload it to your preferred extension store (Chrome Web Store, Edge Add-ons, etc.).
+
 ## Contributing
 
 Contributions are welcome! Please follow these guidelines:
@@ -195,7 +249,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ## Privacy
 
-This extension does not collect, store, or transmit any personal data. All blocked sites and schedules are stored locally in your browser using Chrome's Storage API.
+This extension does not collect, store, or transmit any personal data. All blocked sites and schedules are stored locally in your browser using the WebExtensions Storage API. Your data never leaves your device.
 
 ## Support
 
