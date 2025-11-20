@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { forwardRef } from "react";
 
 import { Schedule } from "@/dto";
 
@@ -10,7 +11,7 @@ interface Props {
     onChange: (days: Schedule["weekDays"]) => void;
 }
 
-const DaysSelect = ({ value: days, onChange, disabled }: Props) => {
+const DaysSelect = forwardRef<HTMLDivElement, Props>(({ value: days, onChange, disabled }, ref) => {
     const onDaySelect = (daySelected: boolean, dayIndex: number) => {
         if (disabled) return;
 
@@ -22,7 +23,7 @@ const DaysSelect = ({ value: days, onChange, disabled }: Props) => {
     };
 
     return (
-        <div className="flex flex-row flex-wrap gap-2">
+        <div ref={ref} className="flex flex-row flex-wrap gap-2">
             {allDays.map((day, index) => {
                 const isDaySelected = days.includes(index + 1);
 
@@ -46,6 +47,8 @@ const DaysSelect = ({ value: days, onChange, disabled }: Props) => {
             })}
         </div>
     );
-};
+});
+
+DaysSelect.displayName = "DaysSelect";
 
 export default DaysSelect;

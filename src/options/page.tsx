@@ -32,7 +32,7 @@ const OptionsPage = () => {
                 </h1>
                 <div className="flex flex-row items-center gap-2">
                     <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger asChild>
                             <Button
                                 size="sm"
                                 variant="outline"
@@ -47,7 +47,7 @@ const OptionsPage = () => {
                     </Tooltip>
 
                     <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger asChild>
                             <ThemeToggle />
                         </TooltipTrigger>
                         <TooltipContent>Toggle theme</TooltipContent>

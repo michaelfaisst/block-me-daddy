@@ -1,12 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createId } from "@paralleldrive/cuid2";
-import { PlusIcon } from "lucide-react";
+import { InfoIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import * as z from "zod";
 
 import {
+    Alert,
+    AlertDescription,
     Button,
     Dialog,
     DialogContent,
@@ -27,7 +29,7 @@ import { Site } from "@/dto";
 
 const formSchema = z.object({
     site: z.string().url(),
-    exact: z.boolean().default(false)
+    exact: z.boolean()
 });
 
 const AddSiteDialog = () => {
@@ -37,7 +39,8 @@ const AddSiteDialog = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            site: ""
+            site: "",
+            exact: false
         }
     });
 
@@ -65,6 +68,13 @@ const AddSiteDialog = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="space-y-4">
+                            <Alert>
+                                <InfoIcon className="h-4 w-4" />
+                                <AlertDescription>
+                                    Enter a domain without protocol (e.g., youtube.com). 
+                                    Domains are matched flexibly - blocking youtube.com will also block www.youtube.com and https://youtube.com.
+                                </AlertDescription>
+                            </Alert>
                             <FormField
                                 control={form.control}
                                 name="site"

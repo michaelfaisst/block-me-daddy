@@ -92,11 +92,11 @@ const BlockedSites = () => {
                                 onSiteUpdated={updateSite}
                             />
 
-                            <Button variant="ghostDestructive">
-                                <LucideTrash
-                                    size={16}
-                                    onClick={() => deleteSite(site.id)}
-                                />
+                            <Button
+                                variant="ghostDestructive"
+                                onClick={() => deleteSite(site.id)}
+                            >
+                                <LucideTrash size={16} />
                             </Button>
                         </div>
                     </div>
