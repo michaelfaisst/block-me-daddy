@@ -17,7 +17,10 @@ import {
 } from "../components/ui";
 
 const OptionsPage = () => {
-    const [enabled, setEnabled] = useChromeStorageLocal<boolean>("enabled");
+    const [enabled, setEnabled] = useChromeStorageLocal<boolean>(
+        "enabled",
+        true
+    );
 
     const openGithub = () => {
         window.open(
