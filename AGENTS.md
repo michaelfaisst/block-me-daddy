@@ -6,10 +6,13 @@
 - `bun run test` - Run all tests with Vitest
 - `bun run test src/lib/blocking.test.ts` - Run single test file
 - `bun run test:ui` - Run tests with UI
+- `bun run lint` - Run ESLint to check for code issues
+- `bun run lint:fix` - Run ESLint and auto-fix issues
 - `bun run prettify` - Format code with Prettier
 
 ## Code Style
 
+- **Linting**: ESLint configured with TypeScript and React rules. Run `bun run lint` to check.
 - **Imports**: Three groups separated by blank lines: (1) third-party, (2) `@/` paths, (3) relative. Auto-sorted by Prettier plugin.
 - **Formatting**: 4-space tabs, no trailing commas, double quotes for strings
 - **TypeScript**: Strict mode enabled. Use Zod schemas for validation (see `src/dto/index.ts`)
@@ -39,4 +42,5 @@
 - Use clear, descriptive commit messages
 - Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format
 - Always check tests pass before committing
-- Run `bun run prettify` to ensure code is formatted before committing
+- ESLint and Prettier will run automatically on staged files via lint-staged
+- You can manually run `bun run lint:fix` and `bun run prettify` before committing

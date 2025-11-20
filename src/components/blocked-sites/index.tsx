@@ -1,6 +1,6 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { LucideMegaphone, LucideTrash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import {
@@ -22,7 +22,7 @@ import {
     SelectValue
 } from "@/components/ui";
 import { Site } from "@/dto";
-import { ANIMATION, PAGINATION, STORAGE_KEYS, URLS } from "@/lib/constants";
+import { ANIMATION, PAGINATION, STORAGE_KEYS } from "@/lib/constants";
 
 import AnimatePresence from "../animate-presence";
 import AddSiteDialog from "./add-site";
@@ -79,33 +79,30 @@ const BlockedSites = () => {
     };
 
     const totalPages = Math.ceil(sites.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
+    // Ensure current page is within valid range
+    const validCurrentPage =
+        totalPages > 0 && currentPage > totalPages ? 1 : currentPage;
+    const startIndex = (validCurrentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedSites = sites.slice(startIndex, endIndex);
-
-    // Reset to first page if current page is out of bounds
-    useEffect(() => {
-        if (currentPage > totalPages && totalPages > 0) {
-            setCurrentPage(1);
-        }
-    }, [currentPage, totalPages]);
 
     const getPageNumbers = () => {
         const pages: (number | string)[] = [];
         const maxPagesToShow = PAGINATION.MAX_PAGES_TO_SHOW;
+        const validPage = validCurrentPage;
 
         if (totalPages <= maxPagesToShow) {
             for (let i = 1; i <= totalPages; i++) {
                 pages.push(i);
             }
         } else {
-            if (currentPage <= 3) {
+            if (validPage <= 3) {
                 for (let i = 1; i <= 4; i++) {
                     pages.push(i);
                 }
                 pages.push("...");
                 pages.push(totalPages);
-            } else if (currentPage >= totalPages - 2) {
+            } else if (validPage >= totalPages - 2) {
                 pages.push(1);
                 pages.push("...");
                 for (let i = totalPages - 3; i <= totalPages; i++) {
@@ -114,9 +111,9 @@ const BlockedSites = () => {
             } else {
                 pages.push(1);
                 pages.push("...");
-                pages.push(currentPage - 1);
-                pages.push(currentPage);
-                pages.push(currentPage + 1);
+                pages.push(validPage - 1);
+                pages.push(validPage);
+                pages.push(validPage + 1);
                 pages.push("...");
                 pages.push(totalPages);
             }
@@ -153,7 +150,7 @@ const BlockedSites = () => {
                     <AlertDescription className="text-secondary-foreground">
                         Add your first site by clicking the button below.
                         Afterall, this extension would be pretty useless if you
-                        don't block any sites 🤓
+                        don&apos;t block any sites 🤓
                     </AlertDescription>
                 </Alert>
             </AnimatePresence>
@@ -243,9 +240,9 @@ const BlockedSites = () => {
                                             Math.max(1, prev - 1)
                                         )
                                     }
-                                    aria-disabled={currentPage === 1}
+                                    aria-disabled={validCurrentPage === 1}
                                     className={
-                                        currentPage === 1
+                                        validCurrentPage === 1
                                             ? "pointer-events-none opacity-50"
                                             : "cursor-pointer"
                                     }
@@ -261,7 +258,7 @@ const BlockedSites = () => {
                                             onClick={() =>
                                                 setCurrentPage(page as number)
                                             }
-                                            isActive={currentPage === page}
+                                            isActive={validCurrentPage === page}
                                             className="cursor-pointer"
                                         >
                                             {page}
@@ -277,9 +274,11 @@ const BlockedSites = () => {
                                             Math.min(totalPages, prev + 1)
                                         )
                                     }
-                                    aria-disabled={currentPage === totalPages}
+                                    aria-disabled={
+                                        validCurrentPage === totalPages
+                                    }
                                     className={
-                                        currentPage === totalPages
+                                        validCurrentPage === totalPages
                                             ? "pointer-events-none opacity-50"
                                             : "cursor-pointer"
                                     }

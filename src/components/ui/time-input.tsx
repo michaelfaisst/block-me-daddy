@@ -7,9 +7,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-export interface TimeInputProps extends NumberFormatBaseProps {}
-
-const TimeInput = ({ className, type, ...props }: TimeInputProps) => {
+const TimeInput = ({ className, ...props }: NumberFormatBaseProps) => {
     const { format, ...rest } = usePatternFormat({
         ...props,
         format: "##:##"

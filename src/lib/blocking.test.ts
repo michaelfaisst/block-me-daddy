@@ -152,7 +152,7 @@ describe("blocking logic", () => {
         });
 
         it("should return true when schedules is undefined", () => {
-            const result = isInSchedule(undefined as any);
+            const result = isInSchedule(undefined as unknown as Schedule[]);
             expect(result).toBe(true);
         });
 
@@ -608,7 +608,7 @@ describe("blocking logic", () => {
                 shouldBlockSite(
                     "https://facebook.com",
                     sites,
-                    null as any,
+                    null as unknown as Schedule[],
                     true
                 )
             ).toBe(true);
@@ -616,7 +616,7 @@ describe("blocking logic", () => {
                 shouldBlockSite(
                     "https://facebook.com",
                     sites,
-                    undefined as any,
+                    undefined as unknown as Schedule[],
                     true
                 )
             ).toBe(true);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const HELL_NO_GIFS = [
     "https://media3.giphy.com/media/cf8wLYdRWjM6A/giphy.gif?cid=ecf05e47cxm4gtpsexiudbi68b1g7j8bghfn1j0sp9bi78di&ep=v1_gifs_search&rid=giphy.gif&ct=g",
@@ -10,15 +10,11 @@ const HELL_NO_GIFS = [
 ];
 
 const BlockedPage = () => {
-    const [gifUrl, setGifUrl] = useState<string>("");
-    const [imageError, setImageError] = useState(false);
-
-    useEffect(() => {
+    const [gifUrl] = useState<string>(() => {
         // Select a random GIF when the component mounts
-        const randomGif =
-            HELL_NO_GIFS[Math.floor(Math.random() * HELL_NO_GIFS.length)];
-        setGifUrl(randomGif);
-    }, []);
+        return HELL_NO_GIFS[Math.floor(Math.random() * HELL_NO_GIFS.length)];
+    });
+    const [imageError, setImageError] = useState(false);
 
     return (
         <div className="container flex flex-col items-center justify-center h-screen">
@@ -27,8 +23,8 @@ const BlockedPage = () => {
             </h1>
 
             <p className="text-lg text-muted-foreground mb-1 text-center">
-                You've told me you don't want to see this page again. So I'm not
-                showing it to you.
+                You&apos;ve told me you don&apos;t want to see this page again.
+                So I&apos;m not showing it to you.
             </p>
 
             <p className="text-lg font-bold mb-8 text-center">

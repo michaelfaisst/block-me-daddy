@@ -1,10 +1,7 @@
 import { createContext, useContext, useEffect } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
-import { z } from "zod";
 
-const ThemeSchema = z.enum(["light", "dark", "system"]).default("system");
-
-export type Theme = z.infer<typeof ThemeSchema>;
+export type Theme = "light" | "dark" | "system";
 
 type ThemeProviderProps = {
     children: React.ReactNode;

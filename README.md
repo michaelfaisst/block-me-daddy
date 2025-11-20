@@ -1,6 +1,6 @@
 # Block Me Daddy
 
-A Chrome extension that helps you stay focused by blocking distracting websites with flexible scheduling and a beautiful dark mode UI.
+A Chrome extension that helps you stay focused by blocking distracting websites based on customizable schedules.
 
 ## Features
 
@@ -15,6 +15,7 @@ A Chrome extension that helps you stay focused by blocking distracting websites 
 ## Screenshots
 
 ![Options Page](assets/icon128.png)
+
 <!-- TODO: Add actual screenshots after Phase 6 -->
 
 ## Installation
@@ -33,26 +34,29 @@ _Coming soon - extension will be published to Chrome Web Store_
 #### Setup
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/michaelfaisst/block-me-daddy.git
 cd block-me-daddy
 ```
 
 2. Install dependencies:
+
 ```bash
 bun install
 ```
 
 3. Build the extension:
+
 ```bash
 bun run build
 ```
 
 4. Load the extension in Chrome:
-   - Open Chrome and navigate to `chrome://extensions/`
-   - Enable "Developer mode" (toggle in top-right corner)
-   - Click "Load unpacked"
-   - Select the `dist` folder from the project directory
+    - Open Chrome and navigate to `chrome://extensions/`
+    - Enable "Developer mode" (toggle in top-right corner)
+    - Click "Load unpacked"
+    - Select the `dist` folder from the project directory
 
 ## Usage
 
@@ -65,6 +69,7 @@ bun run build
 5. Click "Add Site"
 
 **Tips:**
+
 - Use domain matching for `youtube.com` to block all YouTube pages
 - Use exact matching for specific pages like `reddit.com/r/gaming`
 - Don't include `www.` - the extension handles this automatically

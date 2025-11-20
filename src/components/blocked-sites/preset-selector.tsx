@@ -57,15 +57,6 @@ const PresetSelector = ({
         return category.sites.every((site) => selectedSites.has(site));
     };
 
-    const isCategoryIndeterminate = (categoryId: string) => {
-        const category = PRESET_CATEGORIES.find((c) => c.id === categoryId);
-        if (!category) return false;
-        const checkedCount = category.sites.filter((site) =>
-            selectedSites.has(site)
-        ).length;
-        return checkedCount > 0 && checkedCount < category.sites.length;
-    };
-
     const handleAddSelected = () => {
         const existingDomains = new Set(
             existingSites.map((s) => s.site.toLowerCase())
