@@ -22,6 +22,7 @@ import {
     SelectValue
 } from "@/components/ui";
 import { Site } from "@/dto";
+import { ANIMATION, PAGINATION, STORAGE_KEYS, URLS } from "@/lib/constants";
 
 import AnimatePresence from "../animate-presence";
 import AddSiteDialog from "./add-site";
@@ -29,14 +30,17 @@ import EditSiteDialog from "./edit-site";
 import PresetSelector from "./preset-selector";
 
 const BlockedSites = () => {
-    const [sites, setSites] = useChromeStorageLocal<Site[]>("sites", []);
+    const [sites, setSites] = useChromeStorageLocal<Site[]>(
+        STORAGE_KEYS.SITES,
+        []
+    );
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useChromeStorageLocal<number>(
-        "itemsPerPage",
-        10
+        STORAGE_KEYS.ITEMS_PER_PAGE,
+        PAGINATION.DEFAULT_ITEMS_PER_PAGE
     );
     const [animationParent] = useAutoAnimate({
-        duration: 150
+        duration: ANIMATION.DEFAULT_DURATION
     });
 
     const deleteSite = (id: string) => {
@@ -74,7 +78,6 @@ const BlockedSites = () => {
         setCurrentPage(newTotalPages);
     };
 
-    // Calculate pagination
     const totalPages = Math.ceil(sites.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -87,10 +90,9 @@ const BlockedSites = () => {
         }
     }, [currentPage, totalPages]);
 
-    // Generate page numbers to display
     const getPageNumbers = () => {
         const pages: (number | string)[] = [];
-        const maxPagesToShow = 5;
+        const maxPagesToShow = PAGINATION.MAX_PAGES_TO_SHOW;
 
         if (totalPages <= maxPagesToShow) {
             for (let i = 1; i <= totalPages; i++) {

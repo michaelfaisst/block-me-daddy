@@ -564,9 +564,11 @@ describe("blocking logic", () => {
                 { id: "1", site: "https://example.com", exact: false }
             ];
 
-            // These should not throw errors
+            // These should not throw errors and return undefined
             expect(() => getSite("", sites)).not.toThrow();
-            expect(() => getSite("not-a-url", sites)).toThrow();
+            expect(getSite("", sites)).toBeUndefined();
+            expect(() => getSite("not-a-url", sites)).not.toThrow();
+            expect(getSite("not-a-url", sites)).toBeUndefined();
         });
 
         it("should handle sites with unusual characters", () => {

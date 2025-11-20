@@ -1,44 +1,52 @@
 import { Schedule, Site } from "@/dto";
-import { getSite, isInSchedule, shouldBlockSite } from "@/lib/blocking";
+import { shouldBlockSite } from "@/lib/blocking";
+import { STORAGE_KEYS, URLS } from "@/lib/constants";
 
+/**
+ * Opens the extension options page when the extension icon is clicked
+ */
 chrome.action.onClicked.addListener(() => {
     if (chrome.runtime.openOptionsPage) {
         chrome.runtime.openOptionsPage();
     } else {
-        window.open(chrome.runtime.getURL("options.html"));
+        window.open(chrome.runtime.getURL(URLS.OPTIONS_PAGE));
     }
 });
 
+/**
+ * Monitors tab updates and blocks sites based on user configuration
+ * Optimized with early returns and batched storage reads
+ */
 chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
+    // Early return: tab ID must exist
     if (tab.id == undefined) return;
 
     const url = changeInfo.url || tab.pendingUrl || tab.url;
 
-    // Prevent redirect loop - don't block if already on the blocked page
-    if (url?.includes("blocked.html")) return;
+    if (!url || url.includes(URLS.BLOCKED_PAGE)) return;
 
-    const enabledSettings = await chrome.storage.local.get("enabled");
-    const siteSettings = (await chrome.storage.local.get("sites")) as {
-        sites: Site[];
-    };
-    const schedulesSettings = (await chrome.storage.local.get("schedules")) as {
-        schedules: Schedule[];
-    };
+    const storage = await chrome.storage.local.get([
+        STORAGE_KEYS.ENABLED,
+        STORAGE_KEYS.SITES,
+        STORAGE_KEYS.SCHEDULES
+    ]);
+
+    if (storage[STORAGE_KEYS.ENABLED] === false) return;
 
     const shouldBlock = shouldBlockSite(
         url,
-        siteSettings.sites || [],
-        schedulesSettings.schedules || [],
-        enabledSettings.enabled !== false
+        (storage[STORAGE_KEYS.SITES] as Site[]) || [],
+        (storage[STORAGE_KEYS.SCHEDULES] as Schedule[]) || [],
+        storage[STORAGE_KEYS.ENABLED] !== false
     );
 
     console.log("Blocking check:", {
         url,
         shouldBlock,
-        enabled: enabledSettings.enabled
+        enabled: storage[STORAGE_KEYS.ENABLED]
     });
 
     if (shouldBlock) {
-        chrome.tabs.update(tab.id, { url: "blocked.html" });
+        chrome.tabs.update(tab.id, { url: URLS.BLOCKED_PAGE });
     }
 });

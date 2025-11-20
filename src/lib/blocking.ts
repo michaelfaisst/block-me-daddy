@@ -21,12 +21,20 @@ export interface StorageData {
     enabled?: boolean;
 }
 
-// Helper function to normalize hostname by removing www prefix
+/**
+ * Normalizes hostname by removing www prefix for consistent comparison
+ * @param hostname - The hostname to normalize
+ * @returns The normalized hostname without www prefix
+ */
 export const normalizeHostname = (hostname: string): string => {
     return hostname.replace(/^www\./i, "");
 };
 
-// Helper function to ensure URL has a protocol
+/**
+ * Ensures a URL has a protocol (https by default)
+ * @param url - The URL to check
+ * @returns URL with protocol prepended if missing
+ */
 export const ensureProtocol = (url: string): string => {
     if (!/^https?:\/\//i.test(url)) {
         return `https://${url}`;
@@ -34,12 +42,26 @@ export const ensureProtocol = (url: string): string => {
     return url;
 };
 
+/**
+ * Finds a matching site in the blocked sites list
+ * @param url - The URL to check
+ * @param sites - Array of blocked sites to check against
+ * @returns The matching Site object or undefined if no match
+ */
 export const getSite = (
     url: string | undefined,
     sites: Site[]
 ): Site | undefined => {
-    const hostName = url ? new URL(url).hostname : null;
-    if (!hostName) return;
+    // Early return: no URL or no sites to check
+    if (!url || !sites || sites.length === 0) return undefined;
+
+    let hostName: string;
+    try {
+        hostName = new URL(url).hostname;
+    } catch {
+        // Early return: invalid URL
+        return undefined;
+    }
 
     const normalizedHostName = normalizeHostname(hostName);
 
@@ -67,10 +89,17 @@ export const getSite = (
     return site;
 };
 
+/**
+ * Checks if the current time falls within any of the configured schedules
+ * @param schedules - Array of schedule configurations
+ * @param now - The current date/time to check (defaults to current time)
+ * @returns True if current time is within any schedule, or if no schedules configured
+ */
 export const isInSchedule = (
     schedules: Schedule[],
     now: Date = new Date()
 ): boolean => {
+    // Early return: no schedules means always active
     if (!schedules || schedules.length === 0) {
         return true;
     }
@@ -163,6 +192,15 @@ export const isInSchedule = (
     return schedule != undefined;
 };
 
+/**
+ * Determines if a site should be blocked based on configuration
+ * @param url - The URL to check
+ * @param sites - Array of blocked sites
+ * @param schedules - Array of schedule configurations
+ * @param enabled - Whether blocking is globally enabled
+ * @param now - Optional current date/time for testing
+ * @returns True if the site should be blocked
+ */
 export const shouldBlockSite = (
     url: string | undefined,
     sites: Site[],
@@ -170,11 +208,18 @@ export const shouldBlockSite = (
     enabled: boolean,
     now?: Date
 ): boolean => {
-    // Default to enabled if not set
+    // Early return: blocking disabled
     if (enabled === false) return false;
 
+    // Early return: no URL to check
+    if (!url) return false;
+
     const site = getSite(url, sites);
+
+    // Early return: site not in block list
+    if (!site) return false;
+
     const inSchedule = isInSchedule(schedules, now);
 
-    return !!(site && inSchedule);
+    return inSchedule;
 };
