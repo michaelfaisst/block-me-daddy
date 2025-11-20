@@ -4,6 +4,8 @@ export default defineManifest({
     manifest_version: 3,
     name: "Block me daddy",
     version: "1.0.0",
+    description:
+        "Stay focused and productive by blocking distracting websites with customizable schedules. Your productivity guardian with a sense of humor.",
     action: { default_title: "Block me daddy" },
     options_page: "options.html",
     permissions: ["storage", "tabs"],

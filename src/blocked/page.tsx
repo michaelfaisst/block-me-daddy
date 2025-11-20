@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+/**
+ * Array of GIF URLs that tell the user to go away.
+ * Displayed randomly when a user tries to access a blocked site.
+ */
 const HELL_NO_GIFS = [
     "https://media3.giphy.com/media/cf8wLYdRWjM6A/giphy.gif?cid=ecf05e47cxm4gtpsexiudbi68b1g7j8bghfn1j0sp9bi78di&ep=v1_gifs_search&rid=giphy.gif&ct=g",
     "https://media.giphy.com/media/STfLOU6iRBRunMciZv/giphy.gif",
@@ -11,7 +15,7 @@ const HELL_NO_GIFS = [
 
 const BlockedPage = () => {
     const [gifUrl] = useState<string>(() => {
-        // Select a random GIF when the component mounts
+        // Select a random "go away" GIF when the component mounts
         return HELL_NO_GIFS[Math.floor(Math.random() * HELL_NO_GIFS.length)];
     });
     const [imageError, setImageError] = useState(false);
