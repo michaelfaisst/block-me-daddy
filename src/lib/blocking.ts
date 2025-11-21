@@ -96,7 +96,25 @@ export const getSite = (
             );
 
             if (!site.exact) {
-                return normalizedBlockedHostName === normalizedHostName;
+                // Check for exact hostname match first
+                if (normalizedBlockedHostName === normalizedHostName) {
+                    return true;
+                }
+
+                // If blockSubdomains is enabled (default true), check if the current hostname is a subdomain
+                const shouldBlockSubdomains =
+                    site.blockSubdomains !== undefined
+                        ? site.blockSubdomains
+                        : true;
+                if (shouldBlockSubdomains) {
+                    // Check if normalizedHostName ends with .normalizedBlockedHostName
+                    // e.g., "michael.faisst.io" ends with ".faisst.io"
+                    return normalizedHostName.endsWith(
+                        `.${normalizedBlockedHostName}`
+                    );
+                }
+
+                return false;
             }
 
             // For exact match, normalize both URLs for comparison

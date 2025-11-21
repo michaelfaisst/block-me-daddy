@@ -144,6 +144,144 @@ describe("blocking logic", () => {
             expect(result).toBeUndefined();
         });
 
+        it("should block subdomains when blockSubdomains is true", () => {
+            const sites: Site[] = [
+                {
+                    id: "1",
+                    site: "faisst.io",
+                    exact: false,
+                    blockSubdomains: true
+                }
+            ];
+
+            // Should match exact domain
+            const result1 = getSite("https://faisst.io", sites);
+            expect(result1).toBeDefined();
+            expect(result1?.id).toBe("1");
+
+            // Should match subdomain
+            const result2 = getSite("https://michael.faisst.io", sites);
+            expect(result2).toBeDefined();
+            expect(result2?.id).toBe("1");
+
+            // Should match nested subdomain
+            const result3 = getSite("https://blog.michael.faisst.io", sites);
+            expect(result3).toBeDefined();
+            expect(result3?.id).toBe("1");
+        });
+
+        it("should not block subdomains when blockSubdomains is false", () => {
+            const sites: Site[] = [
+                {
+                    id: "1",
+                    site: "faisst.io",
+                    exact: false,
+                    blockSubdomains: false
+                }
+            ];
+
+            // Should match exact domain
+            const result1 = getSite("https://faisst.io", sites);
+            expect(result1).toBeDefined();
+            expect(result1?.id).toBe("1");
+
+            // Should NOT match subdomain
+            const result2 = getSite("https://michael.faisst.io", sites);
+            expect(result2).toBeUndefined();
+
+            // Should NOT match nested subdomain
+            const result3 = getSite("https://blog.michael.faisst.io", sites);
+            expect(result3).toBeUndefined();
+        });
+
+        it("should handle www correctly with subdomain blocking", () => {
+            const sites: Site[] = [
+                {
+                    id: "1",
+                    site: "example.com",
+                    exact: false,
+                    blockSubdomains: true
+                }
+            ];
+
+            // www should be normalized and match
+            const result1 = getSite("https://www.example.com", sites);
+            expect(result1).toBeDefined();
+            expect(result1?.id).toBe("1");
+
+            // Subdomain should match
+            const result2 = getSite("https://api.example.com", sites);
+            expect(result2).toBeDefined();
+            expect(result2?.id).toBe("1");
+
+            // www.subdomain should match (www removed, then subdomain check)
+            const result3 = getSite("https://www.api.example.com", sites);
+            expect(result3).toBeDefined();
+            expect(result3?.id).toBe("1");
+        });
+
+        it("should not match partial domain names", () => {
+            const sites: Site[] = [
+                {
+                    id: "1",
+                    site: "example.com",
+                    exact: false,
+                    blockSubdomains: true
+                }
+            ];
+
+            // Should NOT match different domain that happens to end with similar text
+            const result = getSite("https://notexample.com", sites);
+            expect(result).toBeUndefined();
+        });
+
+        it("should default blockSubdomains to true when not specified", () => {
+            const sites: Site[] = [
+                {
+                    id: "1",
+                    site: "youtube.com",
+                    exact: false
+                    // blockSubdomains not specified, should default to true
+                }
+            ];
+
+            // Should match subdomain with default behavior
+            const result = getSite("https://music.youtube.com", sites);
+            expect(result).toBeDefined();
+            expect(result?.id).toBe("1");
+        });
+
+        it("should work with complex real-world examples", () => {
+            const sites: Site[] = [
+                {
+                    id: "1",
+                    site: "youtube.com",
+                    exact: false,
+                    blockSubdomains: true
+                },
+                {
+                    id: "2",
+                    site: "facebook.com",
+                    exact: false,
+                    blockSubdomains: false
+                }
+            ];
+
+            // YouTube subdomains should be blocked
+            expect(getSite("https://music.youtube.com", sites)?.id).toBe("1");
+            expect(getSite("https://m.youtube.com", sites)?.id).toBe("1");
+            expect(getSite("https://studio.youtube.com", sites)?.id).toBe("1");
+
+            // Facebook exact domain should be blocked
+            expect(getSite("https://facebook.com", sites)?.id).toBe("2");
+
+            // Facebook subdomains should NOT be blocked
+            expect(
+                getSite("https://developers.facebook.com", sites)
+            ).toBeUndefined();
+            expect(getSite("https://m.facebook.com", sites)).toBeUndefined();
+        });
+
         it("should match exact URLs when stored without protocol", () => {
             const sites: Site[] = [
                 {

@@ -1,14 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createId } from "@paralleldrive/cuid2";
-import { InfoIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useChromeStorageLocal } from "use-chrome-storage";
-import * as z from "zod";
 
 import {
-    Alert,
-    AlertDescription,
     Button,
     Dialog,
     DialogContent,
@@ -16,38 +13,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    Input,
-    Switch
+    Form
 } from "@/components/ui";
 import { Site } from "@/dto";
-import { normalizeUrl } from "@/lib/blocking";
 
-const formSchema = z.object({
-    site: z
-        .string()
-        .min(1, "Site is required")
-        .refine(
-            (value) => {
-                // Reject URLs that start with protocol or www
-                if (/^https?:\/\//i.test(value) || /^www\./i.test(value)) {
-                    return false;
-                }
-                // Use normalizeUrl to validate that the input is a valid URL
-                return normalizeUrl(value) !== undefined;
-            },
-            {
-                message:
-                    "Enter a valid domain without protocol or www (e.g., youtube.com or youtube.com/watch?v=123)"
-            }
-        ),
-    exact: z.boolean()
-});
+import { SiteFormFields, SiteFormValues, siteFormSchema } from "./site-form";
 
 interface AddSiteDialogProps {
     onSiteAdded: (site: Site) => void;
@@ -57,15 +27,16 @@ const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
     const [open, setOpen] = useState(false);
     const [sites] = useChromeStorageLocal<Site[]>("sites", []);
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<SiteFormValues>({
+        resolver: zodResolver(siteFormSchema),
         defaultValues: {
             site: "",
-            exact: false
+            exact: false,
+            blockSubdomains: true
         }
     });
 
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
+    const onSubmit = (data: SiteFormValues) => {
         // Check if site already exists
         const isDuplicate = sites.some((s) => s.site === data.site);
         if (isDuplicate) {
@@ -76,7 +47,13 @@ const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
             return;
         }
 
-        const newSite = { id: createId(), site: data.site, exact: data.exact };
+        const newSite = {
+            id: createId(),
+            site: data.site,
+            exact: data.exact,
+            // When exact is true, blockSubdomains should always be false
+            blockSubdomains: data.exact ? false : data.blockSubdomains
+        };
         onSiteAdded(newSite);
         setOpen(false);
         form.reset();
@@ -84,7 +61,7 @@ const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <Button>
                     <PlusIcon className="w-4 h-4 mr-2" /> Add site
                 </Button>
@@ -96,47 +73,7 @@ const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="space-y-4">
-                            <Alert>
-                                <InfoIcon className="h-4 w-4" />
-                                <AlertDescription>
-                                    Enter a domain without protocol or www
-                                    (e.g., youtube.com). Domains are matched
-                                    flexibly - blocking youtube.com will also
-                                    block www.youtube.com and
-                                    https://youtube.com.
-                                </AlertDescription>
-                            </Alert>
-                            <FormField
-                                control={form.control}
-                                name="site"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Site</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="exact"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-row justify-between items-center space-y-0">
-                                        <FormLabel>Exact match</FormLabel>
-                                        <FormControl>
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
+                        <SiteFormFields form={form} />
                         <DialogFooter className="mt-4">
                             <Button type="submit">Add</Button>
                         </DialogFooter>

@@ -5,11 +5,13 @@ import { z } from "zod";
  * @property id - Unique identifier (CUID)
  * @property site - Domain or URL to block (e.g., "facebook.com")
  * @property exact - If true, only blocks exact URL match; if false, blocks entire domain
+ * @property blockSubdomains - If true, blocks all subdomains of the site (e.g., blocking "example.com" also blocks "sub.example.com")
  */
 export const siteSchema = z.object({
     id: z.string(),
     site: z.string(),
-    exact: z.boolean().default(false)
+    exact: z.boolean().default(false),
+    blockSubdomains: z.boolean().default(true).optional()
 });
 
 /**
