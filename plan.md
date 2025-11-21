@@ -290,4 +290,3 @@ A Chrome extension that helps users block distracting websites with schedule sup
 - ✅ Final build successful with all 52 tests passing
 - ✅ Reviewed and confirmed all manifest settings
 - 📝 Remaining: Create promotional images, demo video, and test installation flow
-

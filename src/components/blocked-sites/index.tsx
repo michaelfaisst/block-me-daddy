@@ -190,14 +190,11 @@ const BlockedSites = () => {
                 </div>
             )}
 
-            <div
-                className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800 mb-4"
-                ref={animationParent}
-            >
+            <div className="flex flex-col gap-2 mb-4" ref={animationParent}>
                 {paginatedSites.map((site) => (
                     <div
                         key={site.id}
-                        className="py-3 flex flex-row justify-between items-center"
+                        className="px-4 py-2.5 flex flex-row justify-between items-center bg-card border rounded-xl"
                     >
                         <div className="text-sm flex flex-row items-center">
                             <img
@@ -208,6 +205,11 @@ const BlockedSites = () => {
                             {site.exact && (
                                 <Badge variant="secondary" className="ml-4">
                                     Exact
+                                </Badge>
+                            )}
+                            {!site.exact && (site.blockSubdomains ?? true) && (
+                                <Badge variant="secondary" className="ml-4">
+                                    Block subdomains
                                 </Badge>
                             )}
                         </div>

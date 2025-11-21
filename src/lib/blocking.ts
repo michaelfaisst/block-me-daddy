@@ -43,6 +43,27 @@ export const ensureProtocol = (url: string): string => {
 };
 
 /**
+ * Normalizes a URL for consistent comparison by:
+ * - Ensuring https protocol
+ * - Removing www prefix from hostname
+ * - Preserving path and query parameters
+ * @param url - The URL to normalize
+ * @returns Normalized URL string or undefined if invalid
+ */
+export const normalizeUrl = (url: string): string | undefined => {
+    try {
+        const urlWithProtocol = ensureProtocol(url);
+        const parsedUrl = new URL(urlWithProtocol);
+        const normalizedHostname = normalizeHostname(parsedUrl.hostname);
+
+        // Reconstruct URL with normalized hostname and https protocol
+        return `https://${normalizedHostname}${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
+    } catch {
+        return undefined;
+    }
+};
+
+/**
  * Finds a matching site in the blocked sites list
  * @param url - The URL to check
  * @param sites - Array of blocked sites to check against
@@ -75,10 +96,45 @@ export const getSite = (
             );
 
             if (!site.exact) {
-                return normalizedBlockedHostName === normalizedHostName;
+                // Check for exact hostname match first
+                if (normalizedBlockedHostName === normalizedHostName) {
+                    return true;
+                }
+
+                // If blockSubdomains is enabled (default true), check if the current hostname is a subdomain
+                const shouldBlockSubdomains =
+                    site.blockSubdomains !== undefined
+                        ? site.blockSubdomains
+                        : true;
+                if (shouldBlockSubdomains) {
+                    // Check if normalizedHostName ends with .normalizedBlockedHostName
+                    // e.g., "michael.faisst.io" ends with ".faisst.io"
+                    return normalizedHostName.endsWith(
+                        `.${normalizedBlockedHostName}`
+                    );
+                }
+
+                return false;
             }
 
-            return site.site === url;
+            // For exact match, normalize both URLs for comparison
+            // This handles www, protocol variations while still matching exact paths
+            const normalizedStoredUrl = normalizeUrl(site.site);
+            const normalizedBrowserUrl = normalizeUrl(url);
+
+            // Warn if normalization fails to help debug configuration issues
+            if (!normalizedStoredUrl) {
+                console.warn(
+                    `Failed to normalize stored site URL: ${site.site}`
+                );
+                return false;
+            }
+            if (!normalizedBrowserUrl) {
+                console.warn(`Failed to normalize browser URL: ${url}`);
+                return false;
+            }
+
+            return normalizedStoredUrl === normalizedBrowserUrl;
         } catch (error) {
             // If the stored site URL is malformed, skip it
             console.warn(`Malformed site URL in storage: ${site.site}`, error);

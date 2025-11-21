@@ -1,4 +1,5 @@
 import { Moon, Sun } from "lucide-react";
+import { forwardRef } from "react";
 
 import {
     Button,
@@ -9,13 +10,13 @@ import {
 } from "@/components/ui";
 import { useTheme } from "@/context/theme";
 
-export const ThemeToggle = () => {
+export const ThemeToggle = forwardRef<HTMLButtonElement>((props, ref) => {
     const { setTheme } = useTheme();
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
-                <Button variant="outline" size="sm">
+            <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" ref={ref} {...props}>
                     <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                     <span className="sr-only">Toggle theme</span>
@@ -34,4 +35,6 @@ export const ThemeToggle = () => {
             </DropdownMenuContent>
         </DropdownMenu>
     );
-};
+});
+
+ThemeToggle.displayName = "ThemeToggle";
