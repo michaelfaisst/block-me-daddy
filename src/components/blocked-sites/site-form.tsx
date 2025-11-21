@@ -1,5 +1,6 @@
 import { InfoIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
+import validator from "validator";
 import * as z from "zod";
 
 import {
@@ -17,7 +18,6 @@ import {
     TooltipProvider,
     TooltipTrigger
 } from "@/components/ui";
-import { normalizeUrl } from "@/lib/blocking";
 
 export const siteFormSchema = z.object({
     site: z
@@ -29,8 +29,22 @@ export const siteFormSchema = z.object({
                 if (/^https?:\/\//i.test(value) || /^www\./i.test(value)) {
                     return false;
                 }
-                // Use normalizeUrl to validate that the input is a valid URL
-                return normalizeUrl(value) !== undefined;
+
+                // Extract the domain part (before any path/query)
+                const domainPart = value.split("/")[0].split("?")[0];
+
+                // Validate that the domain is a valid FQDN or URL
+                // For paths like youtube.com/watch?v=123, validate the whole thing as URL
+                const isValidDomain = validator.isFQDN(domainPart, {
+                    require_tld: true
+                });
+                const isValidUrl = validator.isURL(value, {
+                    require_protocol: false,
+                    require_tld: true,
+                    require_valid_protocol: false
+                });
+
+                return isValidDomain || isValidUrl;
             },
             {
                 message:
