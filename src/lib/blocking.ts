@@ -104,6 +104,9 @@ export const getSite = (
             const normalizedStoredUrl = normalizeUrl(site.site);
             const normalizedBrowserUrl = normalizeUrl(url);
 
+            if (!normalizedStoredUrl || !normalizedBrowserUrl) {
+                return false;
+            }
             return normalizedStoredUrl === normalizedBrowserUrl;
         } catch (error) {
             // If the stored site URL is malformed, skip it
