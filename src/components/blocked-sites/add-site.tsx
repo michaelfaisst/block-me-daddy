@@ -32,8 +32,8 @@ const formSchema = z.object({
         .string()
         .min(1, "Site is required")
         .regex(
-            /^(?!https?:\/\/)(?!www\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
-            "Enter a domain without protocol or www (e.g., youtube.com)"
+            /^(?!https?:\/\/)(?!www\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/,
+            "Enter a domain without protocol or www (e.g., youtube.com or youtube.com/watch?v=123)"
         ),
     exact: z.boolean()
 });

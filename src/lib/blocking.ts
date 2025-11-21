@@ -43,6 +43,27 @@ export const ensureProtocol = (url: string): string => {
 };
 
 /**
+ * Normalizes a URL for consistent comparison by:
+ * - Ensuring https protocol
+ * - Removing www prefix from hostname
+ * - Preserving path and query parameters
+ * @param url - The URL to normalize
+ * @returns Normalized URL string or undefined if invalid
+ */
+export const normalizeUrl = (url: string): string | undefined => {
+    try {
+        const urlWithProtocol = ensureProtocol(url);
+        const parsedUrl = new URL(urlWithProtocol);
+        const normalizedHostname = normalizeHostname(parsedUrl.hostname);
+
+        // Reconstruct URL with normalized hostname and https protocol
+        return `https://${normalizedHostname}${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
+    } catch {
+        return undefined;
+    }
+};
+
+/**
  * Finds a matching site in the blocked sites list
  * @param url - The URL to check
  * @param sites - Array of blocked sites to check against
@@ -78,7 +99,12 @@ export const getSite = (
                 return normalizedBlockedHostName === normalizedHostName;
             }
 
-            return site.site === url;
+            // For exact match, normalize both URLs for comparison
+            // This handles www, protocol variations while still matching exact paths
+            const normalizedStoredUrl = normalizeUrl(site.site);
+            const normalizedBrowserUrl = normalizeUrl(url);
+
+            return normalizedStoredUrl === normalizedBrowserUrl;
         } catch (error) {
             // If the stored site URL is malformed, skip it
             console.warn(`Malformed site URL in storage: ${site.site}`, error);

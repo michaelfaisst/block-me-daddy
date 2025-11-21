@@ -143,6 +143,22 @@ describe("blocking logic", () => {
             const result = getSite("https://facebook.com", []);
             expect(result).toBeUndefined();
         });
+
+        it("should match exact URLs when stored without protocol", () => {
+            const sites: Site[] = [
+                {
+                    id: "1",
+                    site: "youtube.com/watch?v=123",
+                    exact: true
+                }
+            ];
+            const result1 = getSite("https://youtube.com/watch?v=123", sites);
+            const result2 = getSite("https://youtube.com/watch?v=456", sites);
+
+            expect(result1).toBeDefined();
+            expect(result1?.id).toBe("1");
+            expect(result2).toBeUndefined();
+        });
     });
 
     describe("isInSchedule", () => {
