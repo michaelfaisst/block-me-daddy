@@ -26,14 +26,25 @@ import {
     Switch
 } from "@/components/ui";
 import { Site } from "@/dto";
+import { normalizeUrl } from "@/lib/blocking";
 
 const formSchema = z.object({
     site: z
         .string()
         .min(1, "Site is required")
-        .regex(
-            /^(?!https?:\/\/)(?!www\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/.*)?$/,
-            "Enter a domain without protocol or www (e.g., youtube.com or youtube.com/watch?v=123)"
+        .refine(
+            (value) => {
+                // Reject URLs that start with protocol or www
+                if (/^https?:\/\//i.test(value) || /^www\./i.test(value)) {
+                    return false;
+                }
+                // Use normalizeUrl to validate that the input is a valid URL
+                return normalizeUrl(value) !== undefined;
+            },
+            {
+                message:
+                    "Enter a valid domain without protocol or www (e.g., youtube.com or youtube.com/watch?v=123)"
+            }
         ),
     exact: z.boolean()
 });

@@ -104,6 +104,18 @@ export const getSite = (
             const normalizedStoredUrl = normalizeUrl(site.site);
             const normalizedBrowserUrl = normalizeUrl(url);
 
+            // Warn if normalization fails to help debug configuration issues
+            if (!normalizedStoredUrl) {
+                console.warn(
+                    `Failed to normalize stored site URL: ${site.site}`
+                );
+                return false;
+            }
+            if (!normalizedBrowserUrl) {
+                console.warn(`Failed to normalize browser URL: ${url}`);
+                return false;
+            }
+
             return normalizedStoredUrl === normalizedBrowserUrl;
         } catch (error) {
             // If the stored site URL is malformed, skip it
