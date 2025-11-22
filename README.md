@@ -10,7 +10,6 @@ A browser extension for Chromium-based browsers that helps you stay focused by b
 - **Dark Mode**: Beautiful dark/light theme support with excellent contrast and accessibility
 - **Import/Export**: Back up and restore your blocked sites and schedules as JSON
 - **Smart URL Matching**: Automatically handles www/non-www variants and protocol normalization
-- **Engaging Blocked Page**: Motivational GIFs to keep you on track when you try to visit blocked sites
 
 ## Screenshots
 
