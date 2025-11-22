@@ -82,7 +82,7 @@ const Schedules = () => {
                         <AlertTitle>You have no schedules yet!</AlertTitle>
                         <AlertDescription className="text-secondary-foreground">
                             If you don&apos;t have any schedule, we will block
-                            the sites you chosen all the time (as long as
+                            the sites you have chosen all the time (as long as
                             blocking is enabled). To add a schedule, click the
                             button below.
                         </AlertDescription>
