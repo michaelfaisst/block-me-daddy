@@ -59,8 +59,15 @@ const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
         form.reset();
     };
 
+    const onOpenChange = (isOpen: boolean) => {
+        setOpen(isOpen);
+        if (!isOpen) {
+            form.reset();
+        }
+    };
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
                 <Button>
                     <PlusIcon className="w-4 h-4 mr-2" /> Add site

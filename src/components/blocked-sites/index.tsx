@@ -207,9 +207,9 @@ const BlockedSites = () => {
                                     Exact
                                 </Badge>
                             )}
-                            {!site.exact && (site.blockSubdomains ?? true) && (
+                            {!site.exact && !(site.blockSubdomains ?? true) && (
                                 <Badge variant="secondary" className="ml-4">
-                                    Block subdomains
+                                    Allow subdomains
                                 </Badge>
                             )}
                         </div>
