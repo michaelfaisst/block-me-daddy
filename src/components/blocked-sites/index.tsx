@@ -148,8 +148,8 @@ const BlockedSites = () => {
                     <LucideMegaphone className="h-4 w-4 mr-4" />
                     <AlertTitle>You have no blocked sites yet!</AlertTitle>
                     <AlertDescription className="text-secondary-foreground">
-                        Add your first site by clicking the button below.
-                        Afterall, this extension would be pretty useless if you
+                        Add your first site by clicking the button below. After
+                        all, this extension would be pretty useless if you
                         don&apos;t block any sites 🤓
                     </AlertDescription>
                 </Alert>
@@ -207,9 +207,9 @@ const BlockedSites = () => {
                                     Exact
                                 </Badge>
                             )}
-                            {!site.exact && (site.blockSubdomains ?? true) && (
+                            {!site.exact && !(site.blockSubdomains ?? true) && (
                                 <Badge variant="secondary" className="ml-4">
-                                    Block subdomains
+                                    Allow subdomains
                                 </Badge>
                             )}
                         </div>

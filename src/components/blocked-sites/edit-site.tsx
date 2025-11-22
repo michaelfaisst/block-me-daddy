@@ -61,8 +61,19 @@ const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
         form.reset(data);
     };
 
+    const onOpenChange = (isOpen: boolean) => {
+        setOpen(isOpen);
+        if (!isOpen) {
+            form.reset({
+                site: site.site,
+                exact: site.exact,
+                blockSubdomains: site.blockSubdomains ?? true
+            });
+        }
+    };
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
                 <Button variant="ghost">
                     <LucideEdit size={16} />
