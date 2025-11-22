@@ -6,71 +6,45 @@ Stay focused by blocking distracting websites with customizable schedules. Your 
 
 ## Detailed Description
 
-**Block Me Daddy** is your no-nonsense productivity companion that helps you stay focused by blocking distracting websites when you need it most.
+Block distracting websites on your own schedule. Simple, but effective.
 
-### Why Block Me Daddy?
+### Features
 
-We all know the struggle: one quick check of social media turns into an hour-long scroll session. Block Me Daddy puts you back in control with a straightforward, powerful blocking system that actually helps you get things done.
+**Website Blocking**
 
-### Key Features
+- Block any site by URL or domain
+- 60+ preset sites across 6 categories (social media, news, entertainment, etc.)
+- Exact URL matching or full domain blocking
+- Subdomain blocking options
 
-**🚫 Smart Website Blocking**
-- Block any website with just a URL or domain
-- Works with exact URLs or entire domains
-- Automatic www/non-www normalization
-- Quick preset list with 60+ common distracting sites in 6 categories
+**Scheduling**
 
-**⏰ Flexible Scheduling**
-- Create custom blocking schedules for different times of day
-- Perfect for work hours, study sessions, or focus time
-- Support for overnight schedules
-- Mix and match: some sites blocked always, others only during specific hours
+- Set specific times when sites are blocked
+- Or just block sites 24/7
 
-**😄 Motivation with Humor**
-- Random GIFs that tell you to go away when you hit a blocked site
-- Because staying focused doesn't have to be boring
+**Blocked Page**
 
-**🎨 Beautiful, Modern UI**
-- Clean, intuitive interface built with modern web technologies
-- Full dark mode support
-- Responsive design that works great at any size
+- Gets shown when you try to visit a blocked site
+- Random GIFs to remind you to get back to work
 
-**📦 Import/Export**
-- Export your blocked sites and schedules as JSON
-- Import configurations to new devices or share with others
-- Never lose your productivity setup
+**Privacy**
 
-**🔒 Privacy First**
-- All data stored locally on your device
-- No tracking, no analytics, no data collection
-- Open source and transparent
+- Everything stored locally on your device
+- No tracking or analytics
+- No data ever leaves your browser
+- Open source
 
-### Perfect For:
+**Other Stuff**
 
-- Students fighting procrastination
-- Remote workers maintaining focus
-- Anyone trying to break social media habits
-- Professionals wanting to maximize productivity
-- People with ADHD or focus challenges
+- Dark mode
+- Import/export your settings
+- Clean, modern interface
 
 ### How It Works
 
-1. **Add Sites**: Type in URLs or pick from our curated preset list
-2. **Set Schedules**: Choose when sites should be blocked (or block them 24/7)
-3. **Stay Focused**: Blocked sites redirect to a humorous blocked page
-4. **Get Things Done**: Enjoy your newfound productivity!
+Add the sites you want to block (or pick from presets). Set when they should be blocked. That's it. When you try to visit a blocked site during scheduled hours, you'll see a blocked page instead.
 
-### Technical Details
-
-- Built with modern React and TypeScript
-- Uses Chrome's native storage and tab APIs
-- Minimal performance impact
-- Works offline
-- Regular updates and improvements
-
-### Support
-
-Have questions or feedback? Visit our GitHub repository or reach out through our website. We're constantly improving Block Me Daddy based on user feedback.
+Perfect for staying focused during work hours, study sessions, or anytime you need to avoid distractions.
 
 Made with ❤️ by Michael Faisst
 
@@ -79,6 +53,7 @@ Made with ❤️ by Michael Faisst
 ## Store Listing Assets Needed
 
 ### Screenshots (1280x800 or 640x400)
+
 1. Options page showing blocked sites list
 2. Schedule configuration interface
 3. Preset site selector with categories
@@ -86,16 +61,18 @@ Made with ❤️ by Michael Faisst
 5. Dark mode showcase
 
 ### Promotional Images
+
 - Small tile: 440x280
 - Large tile: 920x680
 - Marquee: 1400x560
 
 ### Video (Optional)
+
 - 30-60 second demo showing:
-  - Adding a site
-  - Setting a schedule
-  - Getting blocked
-  - Using presets
+    - Adding a site
+    - Setting a schedule
+    - Getting blocked
+    - Using presets
 
 ---
 
