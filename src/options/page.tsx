@@ -62,8 +62,8 @@ const OptionsPage = () => {
                 </div>
             </div>
             <p className="scroll-m-20 text-base text-gray-500 dark:text-gray-400 mb-12">
-                Block sites like youtube, facebook, instagram and all these
-                other nasty sites that suck all productivity out of you.
+                Block sites like youtube, facebook, instagram and all the other
+                nasty sites that suck all productivity out of you.
             </p>
 
             <div className="mb-16">

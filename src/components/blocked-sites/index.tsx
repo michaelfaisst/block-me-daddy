@@ -148,8 +148,8 @@ const BlockedSites = () => {
                     <LucideMegaphone className="h-4 w-4 mr-4" />
                     <AlertTitle>You have no blocked sites yet!</AlertTitle>
                     <AlertDescription className="text-secondary-foreground">
-                        Add your first site by clicking the button below.
-                        Afterall, this extension would be pretty useless if you
+                        Add your first site by clicking the button below. After
+                        all, this extension would be pretty useless if you
                         don&apos;t block any sites 🤓
                     </AlertDescription>
                 </Alert>
@@ -190,14 +190,11 @@ const BlockedSites = () => {
                 </div>
             )}
 
-            <div
-                className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800 mb-4"
-                ref={animationParent}
-            >
+            <div className="flex flex-col gap-2 mb-4" ref={animationParent}>
                 {paginatedSites.map((site) => (
                     <div
                         key={site.id}
-                        className="py-3 flex flex-row justify-between items-center"
+                        className="px-4 py-2.5 flex flex-row justify-between items-center bg-card border rounded-xl"
                     >
                         <div className="text-sm flex flex-row items-center">
                             <img
@@ -208,6 +205,11 @@ const BlockedSites = () => {
                             {site.exact && (
                                 <Badge variant="secondary" className="ml-4">
                                     Exact
+                                </Badge>
+                            )}
+                            {!site.exact && !(site.blockSubdomains ?? true) && (
+                                <Badge variant="secondary" className="ml-4">
+                                    Allow subdomains
                                 </Badge>
                             )}
                         </div>
