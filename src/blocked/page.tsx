@@ -21,7 +21,7 @@ const BlockedPage = () => {
     const [imageError, setImageError] = useState(false);
 
     return (
-        <div className="container flex flex-col items-center justify-center h-screen px-4">
+        <div className="container flex flex-col items-center justify-center h-screen">
             <h1 className="scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-6 md:mb-8 block">
                 Hell no!
             </h1>
