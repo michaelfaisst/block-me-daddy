@@ -1,31 +1,48 @@
 import { createId } from "@paralleldrive/cuid2";
 
-import { BlockAttempt, Schedule, Site, Statistics } from "@/dto";
+import { Block, Schedule, Site, Statistics } from "@/dto";
 import { getSite, shouldBlockSite } from "@/lib/blocking";
 import { STORAGE_KEYS, URLS } from "@/lib/constants";
 
 /**
- * Saves a block attempt to storage
- * @param blockAttempt - The block attempt record to save
+ * Saves a block to storage
+ * @param block - The block record to save
  */
-async function saveBlockAttempt(blockAttempt: BlockAttempt): Promise<void> {
+async function saveBlock(block: Block): Promise<void> {
     try {
         const storage = await chrome.storage.local.get([
             STORAGE_KEYS.STATISTICS
         ]);
-        const statistics: Statistics = (storage[
-            STORAGE_KEYS.STATISTICS
-        ] as Statistics) || {
-            blockAttempts: []
-        };
 
-        statistics.blockAttempts.push(blockAttempt);
+        let statistics: Statistics = storage[
+            STORAGE_KEYS.STATISTICS
+        ] as Statistics;
+
+        // Initialize statistics if it doesn't exist or is malformed
+        if (
+            !statistics ||
+            !statistics.blocks ||
+            !Array.isArray(statistics.blocks)
+        ) {
+            statistics = {
+                blocks: []
+            };
+        }
+
+        console.log("Current statistics before save:", statistics);
+
+        statistics.blocks.push(block);
 
         await chrome.storage.local.set({
             [STORAGE_KEYS.STATISTICS]: statistics
         });
+
+        console.log(
+            "Block saved successfully. Total blocks:",
+            statistics.blocks.length
+        );
     } catch (error) {
-        console.error("Failed to save block attempt:", error);
+        console.error("Failed to save block:", error);
     }
 }
 
@@ -74,20 +91,25 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
     });
 
     if (shouldBlock) {
-        // Track the block attempt
+        // Track the block
         const sites = (storage[STORAGE_KEYS.SITES] as Site[]) || [];
         const matchedSite = getSite(url, sites);
 
+        console.log("Block triggered:", { url, matchedSite });
+
         if (matchedSite) {
-            const blockAttempt: BlockAttempt = {
+            const block: Block = {
                 id: createId(),
                 timestamp: Date.now(),
                 siteId: matchedSite.id,
                 url: url
             };
 
+            console.log("Saving block:", block);
             // Save asynchronously without blocking the redirect
-            saveBlockAttempt(blockAttempt);
+            saveBlock(block);
+        } else {
+            console.warn("Block triggered but no matched site found");
         }
 
         chrome.tabs.update(tab.id, { url: URLS.BLOCKED_PAGE });

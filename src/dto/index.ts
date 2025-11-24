@@ -41,13 +41,13 @@ export const scheduleSchema = z.object({
 export type Schedule = z.infer<typeof scheduleSchema>;
 
 /**
- * Schema for a block attempt record
+ * Schema for a block record
  * @property id - Unique identifier (CUID)
  * @property timestamp - Unix timestamp in milliseconds when the block occurred
  * @property siteId - Reference to the blocked site ID
- * @property url - Full URL that was attempted to be accessed
+ * @property url - Full URL that was blocked
  */
-export const blockAttemptSchema = z.object({
+export const blockSchema = z.object({
     id: z.string(),
     timestamp: z.number(),
     siteId: z.string(),
@@ -55,16 +55,16 @@ export const blockAttemptSchema = z.object({
 });
 
 /**
- * TypeScript type for a block attempt
+ * TypeScript type for a block
  */
-export type BlockAttempt = z.infer<typeof blockAttemptSchema>;
+export type Block = z.infer<typeof blockSchema>;
 
 /**
  * Schema for statistics data storage
- * @property blockAttempts - Array of all block attempt records
+ * @property blocks - Array of all block records
  */
 export const statisticsSchema = z.object({
-    blockAttempts: z.array(blockAttemptSchema)
+    blocks: z.array(blockSchema)
 });
 
 /**

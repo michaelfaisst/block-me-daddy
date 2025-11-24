@@ -72,7 +72,7 @@ const OptionsPage = () => {
             </p>
 
             <Tabs defaultValue="settings" className="mb-12 md:mb-16">
-                <TabsList className="mb-6">
+                <TabsList className="mb-6 w-full grid grid-cols-2">
                     <TabsTrigger value="settings">Settings</TabsTrigger>
                     <TabsTrigger value="statistics">Statistics</TabsTrigger>
                 </TabsList>

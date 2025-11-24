@@ -8,41 +8,41 @@ import {
     startOfDay
 } from "date-fns";
 
-import { BlockAttempt, Site } from "@/dto";
+import { Block, Site } from "@/dto";
 
 /**
- * Filters block attempts within a specific date range
- * @param attempts - Array of all block attempts
+ * Filters blocks within a specific date range
+ * @param blocks - Array of all blocks
  * @param startDate - Start of the date range (inclusive)
  * @param endDate - End of the date range (inclusive)
- * @returns Filtered array of block attempts
+ * @returns Filtered array of blocks
  */
-export function getBlockAttemptsInRange(
-    attempts: BlockAttempt[],
+export function getBlocksInRange(
+    blocks: Block[],
     startDate: Date,
     endDate: Date
-): BlockAttempt[] {
+): Block[] {
     const start = startOfDay(startDate);
     const end = endOfDay(endDate);
 
-    return attempts.filter((attempt) => {
-        const attemptDate = new Date(attempt.timestamp);
-        return !isBefore(attemptDate, start) && !isAfter(attemptDate, end);
+    return blocks.filter((block) => {
+        const blockDate = new Date(block.timestamp);
+        return !isBefore(blockDate, start) && !isAfter(blockDate, end);
     });
 }
 
 /**
- * Aggregates block attempts by day
- * @param attempts - Array of block attempts to aggregate
+ * Aggregates blocks by day
+ * @param blocks - Array of blocks to aggregate
  * @returns Array of objects with date string (YYYY-MM-DD) and count
  */
 export function aggregateByDay(
-    attempts: BlockAttempt[]
+    blocks: Block[]
 ): { date: string; count: number }[] {
     const dayMap = new Map<string, number>();
 
-    attempts.forEach((attempt) => {
-        const date = format(new Date(attempt.timestamp), "yyyy-MM-dd");
+    blocks.forEach((block) => {
+        const date = format(new Date(block.timestamp), "yyyy-MM-dd");
         dayMap.set(date, (dayMap.get(date) || 0) + 1);
     });
 
@@ -52,12 +52,12 @@ export function aggregateByDay(
 }
 
 /**
- * Aggregates block attempts by hour (0-23)
- * @param attempts - Array of block attempts to aggregate
+ * Aggregates blocks by hour (0-23)
+ * @param blocks - Array of blocks to aggregate
  * @returns Array of objects with hour (0-23) and count
  */
 export function aggregateByHour(
-    attempts: BlockAttempt[]
+    blocks: Block[]
 ): { hour: number; count: number }[] {
     const hourMap = new Map<number, number>();
 
@@ -66,8 +66,8 @@ export function aggregateByHour(
         hourMap.set(i, 0);
     }
 
-    attempts.forEach((attempt) => {
-        const hour = getHours(new Date(attempt.timestamp));
+    blocks.forEach((block) => {
+        const hour = getHours(new Date(block.timestamp));
         hourMap.set(hour, (hourMap.get(hour) || 0) + 1);
     });
 
@@ -77,12 +77,12 @@ export function aggregateByHour(
 }
 
 /**
- * Aggregates block attempts by day of week
- * @param attempts - Array of block attempts to aggregate
+ * Aggregates blocks by day of week
+ * @param blocks - Array of blocks to aggregate
  * @returns Array of objects with day name and count
  */
 export function aggregateByDayOfWeek(
-    attempts: BlockAttempt[]
+    blocks: Block[]
 ): { day: string; count: number }[] {
     const dayNames = [
         "Sunday",
@@ -101,8 +101,8 @@ export function aggregateByDayOfWeek(
         dayMap.set(i, 0);
     }
 
-    attempts.forEach((attempt) => {
-        const dayIndex = getDay(new Date(attempt.timestamp));
+    blocks.forEach((block) => {
+        const dayIndex = getDay(new Date(block.timestamp));
         dayMap.set(dayIndex, (dayMap.get(dayIndex) || 0) + 1);
     });
 
@@ -122,36 +122,36 @@ export function aggregateByDayOfWeek(
 }
 
 /**
- * Aggregates block attempts by time of day (hour 0-23)
+ * Aggregates blocks by time of day (hour 0-23)
  * Same as aggregateByHour but with more descriptive name for UI
- * @param attempts - Array of block attempts to aggregate
+ * @param blocks - Array of blocks to aggregate
  * @returns Array of objects with hour (0-23) and count
  */
 export function aggregateByTimeOfDay(
-    attempts: BlockAttempt[]
+    blocks: Block[]
 ): { hour: number; count: number }[] {
-    return aggregateByHour(attempts);
+    return aggregateByHour(blocks);
 }
 
 /**
  * Gets the top most-blocked sites with their counts
- * @param attempts - Array of block attempts
+ * @param blocks - Array of blocks
  * @param sites - Array of all blocked sites (for metadata)
  * @param limit - Maximum number of sites to return
  * @returns Array of objects with site and count, sorted by count descending
  */
 export function getTopBlockedSites(
-    attempts: BlockAttempt[],
+    blocks: Block[],
     sites: Site[],
     limit: number
 ): { site: Site; count: number }[] {
     const siteCountMap = new Map<string, number>();
 
-    // Count attempts per site ID
-    attempts.forEach((attempt) => {
+    // Count blocks per site ID
+    blocks.forEach((block) => {
         siteCountMap.set(
-            attempt.siteId,
-            (siteCountMap.get(attempt.siteId) || 0) + 1
+            block.siteId,
+            (siteCountMap.get(block.siteId) || 0) + 1
         );
     });
 
