@@ -11,7 +11,8 @@ export const STORAGE_KEYS = {
     THEME: "theme",
     STATISTICS: "statistics",
     CHART_TIME_RANGE: "chartTimeRange",
-    CHART_TOP_SITES_LIMIT: "chartTopSitesLimit"
+    CHART_TOP_SITES_LIMIT: "chartTopSitesLimit",
+    HEATMAP_TIME_RANGE: "heatmapTimeRange"
 } as const;
 
 // Pagination

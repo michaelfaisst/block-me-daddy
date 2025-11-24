@@ -3,6 +3,8 @@ import {
     format,
     getDay,
     getHours,
+    getISOWeek,
+    getISOWeekYear,
     isAfter,
     isBefore,
     startOfDay
@@ -131,6 +133,59 @@ export function aggregateByTimeOfDay(
     blocks: Block[]
 ): { hour: number; count: number }[] {
     return aggregateByHour(blocks);
+}
+
+/**
+ * Aggregates blocks by week/year and weekday for heat map visualization
+ * @param blocks - Array of blocks to aggregate
+ * @returns Array of objects with week, year, weekday, and count
+ */
+export function aggregateByWeekAndWeekday(blocks: Block[]): {
+    week: number;
+    year: number;
+    weekday: number;
+    weekdayName: string;
+    count: number;
+}[] {
+    const dayNames = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ];
+
+    // Map with key format: "year-week-weekday"
+    const weekdayMap = new Map<string, number>();
+
+    blocks.forEach((block) => {
+        const date = new Date(block.timestamp);
+        const year = getISOWeekYear(date);
+        const week = getISOWeek(date);
+        const weekday = getDay(date);
+        const key = `${year}-${week}-${weekday}`;
+        weekdayMap.set(key, (weekdayMap.get(key) || 0) + 1);
+    });
+
+    return Array.from(weekdayMap.entries())
+        .map(([key, count]) => {
+            const [year, week, weekday] = key.split("-").map(Number);
+            return {
+                week,
+                year,
+                weekday,
+                weekdayName: dayNames[weekday],
+                count
+            };
+        })
+        .sort((a, b) => {
+            // Sort by year, then week, then weekday
+            if (a.year !== b.year) return a.year - b.year;
+            if (a.week !== b.week) return a.week - b.week;
+            return a.weekday - b.weekday;
+        });
 }
 
 /**

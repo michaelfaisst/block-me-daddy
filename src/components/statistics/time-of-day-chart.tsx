@@ -52,7 +52,10 @@ export function TimeOfDayChart({ blocks }: TimeOfDayChartProps) {
                     className="h-[250px] w-full"
                 >
                     <BarChart data={chartData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <CartesianGrid
+                            vertical={false}
+                            stroke="hsl(var(--border))"
+                        />
                         <XAxis
                             dataKey="hour"
                             tickLine={false}

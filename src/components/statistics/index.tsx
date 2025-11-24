@@ -1,5 +1,12 @@
 import { createId } from "@paralleldrive/cuid2";
-import { subDays, subHours } from "date-fns";
+import {
+    endOfDay,
+    endOfWeek,
+    startOfDay,
+    startOfWeek,
+    subDays,
+    subWeeks
+} from "date-fns";
 import { ChartColumn, FlaskConical, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
@@ -20,6 +27,7 @@ import {
     AlertDialogTrigger
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
+import { BlocksHeatmap } from "./blocks-heatmap";
 import { BlocksOverTimeChart } from "./blocks-over-time-chart";
 import { DayOfWeekChart } from "./day-of-week-chart";
 import { StatCard } from "./stat-card";
@@ -48,16 +56,35 @@ export function StatisticsDashboard() {
 
     const totalBlocks = statistics.blocks.length;
     const now = new Date();
-    const blocksToday = getBlocksInRange(
+
+    // Today: from start of today to now
+    const todayStart = startOfDay(now);
+    const blocksToday = getBlocksInRange(statistics.blocks, todayStart, now);
+
+    // Yesterday: entire previous day
+    const yesterdayStart = startOfDay(subDays(now, 1));
+    const yesterdayEnd = endOfDay(subDays(now, 1));
+    const blocksYesterday = getBlocksInRange(
         statistics.blocks,
-        subHours(now, 24),
-        now
+        yesterdayStart,
+        yesterdayEnd
     );
-    const blocksThisWeek = getBlocksInRange(
+
+    // This week: from start of week (Monday) to now
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 });
+    const blocksThisWeek = getBlocksInRange(statistics.blocks, weekStart, now);
+
+    // Last week: entire previous week (Monday to Sunday)
+    const lastWeekStart = startOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
+    const lastWeekEnd = endOfWeek(subWeeks(now, 1), { weekStartsOn: 1 });
+    const blocksLastWeek = getBlocksInRange(
         statistics.blocks,
-        subDays(now, 7),
-        now
+        lastWeekStart,
+        lastWeekEnd
     );
+
+    const todayTrend = blocksToday.length - blocksYesterday.length;
+    const weekTrend = blocksThisWeek.length - blocksLastWeek.length;
 
     const handleClearStatistics = () => {
         setStatistics({ blocks: [] });
@@ -223,18 +250,27 @@ export function StatisticsDashboard() {
                 <StatCard
                     label="Today"
                     value={blocksToday.length}
-                    description="Last 24 hours"
+                    description="Since midnight"
+                    trend={{
+                        value: todayTrend,
+                        comparison: "yesterday"
+                    }}
                 />
                 <StatCard
                     label="This Week"
                     value={blocksThisWeek.length}
-                    description="Last 7 days"
+                    description="Since Monday"
+                    trend={{
+                        value: weekTrend,
+                        comparison: "last week"
+                    }}
                 />
             </div>
 
             {/* Charts */}
             <div className="space-y-4">
                 <BlocksOverTimeChart blocks={statistics.blocks} />
+                <BlocksHeatmap blocks={statistics.blocks} />
                 <TopSitesChart blocks={statistics.blocks} sites={sites} />
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     <DayOfWeekChart blocks={statistics.blocks} />

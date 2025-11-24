@@ -7,6 +7,7 @@ import {
     aggregateByDayOfWeek,
     aggregateByHour,
     aggregateByTimeOfDay,
+    aggregateByWeekAndWeekday,
     getBlocksInRange,
     getTopBlockedSites
 } from "@/lib/statistics";
@@ -494,6 +495,158 @@ describe("statistics", () => {
             expect(result).toHaveLength(1);
             expect(result[0].site.id).toBe("1");
             expect(result[0].count).toBe(3);
+        });
+    });
+
+    describe("aggregateByWeekAndWeekday", () => {
+        it("should aggregate blocks by week and weekday", () => {
+            const result = aggregateByWeekAndWeekday(mockBlocks);
+
+            // 2025-01-06 is Monday (weekday 1) in week 2 of 2025
+            // 2025-01-07 is Tuesday (weekday 2) in week 2 of 2025
+            // 2025-01-08 is Wednesday (weekday 3) in week 2 of 2025
+            expect(result).toContainEqual({
+                week: 2,
+                year: 2025,
+                weekday: 1,
+                weekdayName: "Monday",
+                count: 3
+            });
+            expect(result).toContainEqual({
+                week: 2,
+                year: 2025,
+                weekday: 2,
+                weekdayName: "Tuesday",
+                count: 2
+            });
+            expect(result).toContainEqual({
+                week: 2,
+                year: 2025,
+                weekday: 3,
+                weekdayName: "Wednesday",
+                count: 1
+            });
+        });
+
+        it("should handle blocks spanning multiple weeks", () => {
+            const multiWeek: Block[] = [
+                {
+                    id: "a1",
+                    timestamp: parseISO("2025-01-06T09:00:00").getTime(), // Week 2, Monday
+                    siteId: "1",
+                    url: "https://facebook.com"
+                },
+                {
+                    id: "a2",
+                    timestamp: parseISO("2025-01-13T09:00:00").getTime(), // Week 3, Monday
+                    siteId: "1",
+                    url: "https://facebook.com"
+                },
+                {
+                    id: "a3",
+                    timestamp: parseISO("2025-01-20T09:00:00").getTime(), // Week 4, Monday
+                    siteId: "1",
+                    url: "https://facebook.com"
+                }
+            ];
+
+            const result = aggregateByWeekAndWeekday(multiWeek);
+
+            expect(result).toHaveLength(3);
+            expect(result[0]).toEqual({
+                week: 2,
+                year: 2025,
+                weekday: 1,
+                weekdayName: "Monday",
+                count: 1
+            });
+            expect(result[1]).toEqual({
+                week: 3,
+                year: 2025,
+                weekday: 1,
+                weekdayName: "Monday",
+                count: 1
+            });
+            expect(result[2]).toEqual({
+                week: 4,
+                year: 2025,
+                weekday: 1,
+                weekdayName: "Monday",
+                count: 1
+            });
+        });
+
+        it("should handle empty blocks array", () => {
+            const result = aggregateByWeekAndWeekday([]);
+            expect(result).toEqual([]);
+        });
+
+        it("should aggregate multiple blocks on same week/weekday", () => {
+            const sameDay: Block[] = [
+                {
+                    id: "a1",
+                    timestamp: parseISO("2025-01-06T09:00:00").getTime(),
+                    siteId: "1",
+                    url: "https://facebook.com"
+                },
+                {
+                    id: "a2",
+                    timestamp: parseISO("2025-01-06T14:00:00").getTime(),
+                    siteId: "1",
+                    url: "https://facebook.com"
+                },
+                {
+                    id: "a3",
+                    timestamp: parseISO("2025-01-06T18:00:00").getTime(),
+                    siteId: "1",
+                    url: "https://facebook.com"
+                }
+            ];
+
+            const result = aggregateByWeekAndWeekday(sameDay);
+
+            expect(result).toHaveLength(1);
+            expect(result[0]).toEqual({
+                week: 2,
+                year: 2025,
+                weekday: 1,
+                weekdayName: "Monday",
+                count: 3
+            });
+        });
+
+        it("should sort results by year, week, then weekday", () => {
+            const unsorted: Block[] = [
+                {
+                    id: "a1",
+                    timestamp: parseISO("2025-01-08T09:00:00").getTime(), // Week 2, Wednesday
+                    siteId: "1",
+                    url: "https://facebook.com"
+                },
+                {
+                    id: "a2",
+                    timestamp: parseISO("2025-01-06T09:00:00").getTime(), // Week 2, Monday
+                    siteId: "1",
+                    url: "https://facebook.com"
+                },
+                {
+                    id: "a3",
+                    timestamp: parseISO("2024-12-30T09:00:00").getTime(), // Week 1, Monday
+                    siteId: "1",
+                    url: "https://facebook.com"
+                }
+            ];
+
+            const result = aggregateByWeekAndWeekday(unsorted);
+
+            expect(result[0].year).toBe(2025);
+            expect(result[0].week).toBe(1);
+            expect(result[1].year).toBe(2025);
+            expect(result[1].week).toBe(2);
+            expect(result[1].weekday).toBe(1);
+            expect(result[2].year).toBe(2025);
+            expect(result[2].week).toBe(2);
+            expect(result[2].weekday).toBe(3);
         });
     });
 });

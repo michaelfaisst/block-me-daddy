@@ -153,8 +153,8 @@ export function TopSitesChart({ blocks, sites }: TopSitesChartProps) {
                         margin={{ left: 200 }}
                     >
                         <CartesianGrid
-                            strokeDasharray="3 3"
                             horizontal={false}
+                            stroke="hsl(var(--border))"
                         />
                         <XAxis type="number" allowDecimals={false} />
                         <YAxis

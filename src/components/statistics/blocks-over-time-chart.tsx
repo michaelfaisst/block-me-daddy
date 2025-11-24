@@ -126,7 +126,10 @@ export function BlocksOverTimeChart({ blocks }: BlocksOverTimeChartProps) {
                                 />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <CartesianGrid
+                            vertical={false}
+                            stroke="hsl(var(--border))"
+                        />
                         <XAxis
                             dataKey="date"
                             tickLine={false}
