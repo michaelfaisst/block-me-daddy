@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Responsive design for better usability on smaller screens.
+- Statistics dashboard to track blocked sites over time
+- Responsive design for better usability on smaller screens
+
+### Changed
+
+- Settings page now uses tabbed interface with Settings and Statistics tabs
 
 ## [1.0.0] - 2025-11-20
 

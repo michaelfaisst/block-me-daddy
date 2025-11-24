@@ -8,7 +8,11 @@ export const STORAGE_KEYS = {
     SCHEDULES: "schedules",
     ENABLED: "enabled",
     ITEMS_PER_PAGE: "itemsPerPage",
-    THEME: "theme"
+    THEME: "theme",
+    STATISTICS: "statistics",
+    CHART_TIME_RANGE: "chartTimeRange",
+    CHART_TOP_SITES_LIMIT: "chartTopSitesLimit",
+    HEATMAP_TIME_RANGE: "heatmapTimeRange"
 } as const;
 
 // Pagination
@@ -36,4 +40,9 @@ export const URLS = {
     BLOCKED_PAGE: "blocked.html",
     OPTIONS_PAGE: "options.html",
     FAVICON_API: "https://s2.googleusercontent.com/s2/favicons?domain_url="
+} as const;
+
+// Storage
+export const STORAGE = {
+    QUOTA_BYTES: 10 * 1024 * 1024 // 10 MB - Chrome extension local storage quota
 } as const;
