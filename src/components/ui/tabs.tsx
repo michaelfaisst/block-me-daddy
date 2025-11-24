@@ -32,13 +32,37 @@ const TabsTrigger = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
         variant?: "default" | "underline";
     }
->(({ className, variant = "default", ...props }, ref) => {
-    // Determine if this trigger is active using the data-state prop provided by Radix
-    const isActive = props['data-state'] === 'active';
+>(({ className, variant = "default", value, ...props }, ref) => {
+    const triggerRef = React.useRef<HTMLButtonElement>(null);
+    const [isActive, setIsActive] = React.useState(false);
+
+    React.useImperativeHandle(ref, () => triggerRef.current!);
+
+    // Check if this trigger is active by observing the data-state attribute
+    React.useEffect(() => {
+        if (variant !== "underline" || !triggerRef.current) return;
+
+        const observer = new MutationObserver(() => {
+            const active =
+                triggerRef.current?.getAttribute("data-state") === "active";
+            setIsActive(active);
+        });
+
+        observer.observe(triggerRef.current, {
+            attributes: true,
+            attributeFilter: ["data-state"]
+        });
+
+        // Initial check
+        setIsActive(triggerRef.current.getAttribute("data-state") === "active");
+
+        return () => observer.disconnect();
+    }, [variant]);
 
     return (
         <TabsPrimitive.Trigger
-            ref={ref}
+            ref={triggerRef}
+            value={value}
             className={cn(
                 "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
                 variant === "default" &&
