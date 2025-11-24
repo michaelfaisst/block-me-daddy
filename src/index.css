@@ -87,6 +87,11 @@
         font-family: "Inter", sans-serif;
         min-height: 101vh;
     }
+    #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
 
     [data-sonner-toast] {
         background-color: hsl(var(--popover));

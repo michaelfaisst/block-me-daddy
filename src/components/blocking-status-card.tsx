@@ -1,14 +1,14 @@
 import { Card, Switch } from "./ui";
 
-interface ProtectionStatusCardProps {
+interface BlockingStatusCardProps {
     enabled: boolean;
     onToggle: (enabled: boolean) => void;
 }
 
-export function ProtectionStatusCard({
+export function BlockingStatusCard({
     enabled,
     onToggle
-}: ProtectionStatusCardProps) {
+}: BlockingStatusCardProps) {
     return (
         <Card
             className={`p-4 transition-colors ${
