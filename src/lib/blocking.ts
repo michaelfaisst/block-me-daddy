@@ -275,6 +275,10 @@ export const shouldBlockSite = (
     // Early return: site not in block list
     if (!site) return false;
 
+    // Early return: site is disabled
+    const isSiteEnabled = site.enabled !== undefined ? site.enabled : true;
+    if (!isSiteEnabled) return false;
+
     const inSchedule = isInSchedule(schedules, now);
 
     return inSchedule;

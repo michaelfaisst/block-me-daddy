@@ -2,8 +2,8 @@ import { useChromeStorageLocal } from "use-chrome-storage";
 
 import BlockedSites from "./blocked-sites";
 import ImportExport from "./import-export";
+import { ProtectionStatusCard } from "./protection-status-card";
 import Schedules from "./schedule";
-import { Label, Switch } from "./ui";
 
 export function SettingsTab() {
     const [enabled, setEnabled] = useChromeStorageLocal<boolean>(
@@ -17,14 +17,10 @@ export function SettingsTab() {
                 <p className="scroll-m-20 text-xl md:text-2xl font-bold tracking-tight mb-4">
                     General settings
                 </p>
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        id="airplane-mode"
-                        checked={enabled}
-                        onCheckedChange={(checked) => setEnabled(checked)}
-                    />
-                    <Label htmlFor="airplane-mode">Blocking enabled</Label>
-                </div>
+                <ProtectionStatusCard
+                    enabled={enabled}
+                    onToggle={(checked) => setEnabled(checked)}
+                />
             </div>
 
             <div>

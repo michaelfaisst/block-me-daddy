@@ -2,7 +2,9 @@ import { GithubIcon } from "lucide-react";
 
 import { Toaster } from "@/components/ui/sonner";
 
+import iconUrl from "../../assets/icon48.png";
 import AboutDialog from "../components/about-dialog";
+import { BlockingStatusIndicator } from "../components/blocking-status-indicator";
 import { SettingsTab } from "../components/settings-tab";
 import { StatisticsDashboard } from "../components/statistics";
 import { ThemeToggle } from "../components/theme-toggle";
@@ -30,10 +32,19 @@ const OptionsPage = () => {
             <Toaster position="bottom-center" />
             <div className="container pt-6 md:pt-12">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
-                    <h1 className="scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter">
-                        Block me daddy
-                    </h1>
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <img
+                            src={iconUrl}
+                            alt="Block me daddy icon"
+                            className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12"
+                        />
+                        <h1 className="scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter">
+                            Block me daddy
+                        </h1>
+                    </div>
                     <div className="flex flex-row items-center gap-2">
+                        <BlockingStatusIndicator />
+
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button

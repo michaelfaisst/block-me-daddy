@@ -52,7 +52,8 @@ export const siteFormSchema = z.object({
             }
         ),
     exact: z.boolean(),
-    blockSubdomains: z.boolean()
+    blockSubdomains: z.boolean(),
+    enabled: z.boolean()
 });
 
 export type SiteFormValues = z.infer<typeof siteFormSchema>;
@@ -80,6 +81,40 @@ export const SiteFormFields = ({ form }: SiteFormFieldsProps) => {
                         <FormLabel>Site</FormLabel>
                         <FormControl>
                             <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="enabled"
+                render={({ field }) => (
+                    <FormItem className="flex flex-row justify-between items-center space-y-0">
+                        <div className="flex items-center gap-2">
+                            <FormLabel>Enabled</FormLabel>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <InfoIcon className="h-4 w-4 text-muted-foreground cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p className="max-w-xs">
+                                            When enabled, this site will be
+                                            blocked when global blocking is
+                                            active. When disabled, this site
+                                            will not be blocked even if global
+                                            blocking is enabled.
+                                        </p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </div>
+                        <FormControl>
+                            <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                            />
                         </FormControl>
                         <FormMessage />
                     </FormItem>

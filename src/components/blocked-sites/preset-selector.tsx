@@ -67,7 +67,8 @@ const PresetSelector = ({
             .map((site) => ({
                 id: createId(),
                 site,
-                exact: false
+                exact: false,
+                enabled: true
             }));
 
         onPresetsSelected(newSites);
