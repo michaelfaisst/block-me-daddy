@@ -1,5 +1,6 @@
 import { LucideDownload, LucideUpload } from "lucide-react";
 import { useRef } from "react";
+import { toast } from "sonner";
 import { useChromeStorageLocal } from "use-chrome-storage";
 import { z } from "zod";
 
@@ -62,18 +63,18 @@ const ImportExport = () => {
             setSites(validatedData.sites);
             setSchedules(validatedData.schedules);
 
-            alert(
+            toast.success(
                 `Successfully imported ${validatedData.sites.length} site(s) and ${validatedData.schedules.length} schedule(s)!`
             );
         } catch (error) {
             if (error instanceof z.ZodError) {
-                alert(
+                toast.error(
                     `Invalid file format: ${error.issues.map((e: z.ZodIssue) => e.message).join(", ")}`
                 );
             } else if (error instanceof SyntaxError) {
-                alert("Invalid JSON file");
+                toast.error("Invalid JSON file");
             } else {
-                alert("Failed to import file");
+                toast.error("Failed to import file");
             }
             console.error("Import error:", error);
         } finally {
@@ -97,6 +98,7 @@ const ImportExport = () => {
                 <TooltipTrigger asChild>
                     <Button variant="outline" onClick={handleExport}>
                         <LucideDownload size={16} />
+                        <span className="ml-2">Export</span>
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>Export sites and schedules</TooltipContent>
@@ -106,6 +108,7 @@ const ImportExport = () => {
                 <TooltipTrigger asChild>
                     <Button variant="outline" onClick={handleImport}>
                         <LucideUpload size={16} />
+                        <span className="ml-2">Import</span>
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>Import sites and schedules</TooltipContent>

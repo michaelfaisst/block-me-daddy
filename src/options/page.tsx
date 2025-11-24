@@ -1,8 +1,8 @@
 import { GithubIcon } from "lucide-react";
-import { Toaster } from "sonner";
+
+import { Toaster } from "@/components/ui/sonner";
 
 import AboutDialog from "../components/about-dialog";
-import ImportExport from "../components/import-export";
 import { SettingsTab } from "../components/settings-tab";
 import { StatisticsDashboard } from "../components/statistics";
 import { ThemeToggle } from "../components/theme-toggle";
@@ -27,15 +27,13 @@ const OptionsPage = () => {
 
     return (
         <>
-            <Toaster richColors position="top-right" />
+            <Toaster position="bottom-center" />
             <div className="container pt-6 md:pt-12">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
                     <h1 className="scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter">
                         Block me daddy
                     </h1>
                     <div className="flex flex-row items-center gap-2">
-                        <ImportExport />
-
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
@@ -66,7 +64,10 @@ const OptionsPage = () => {
             </div>
 
             <Tabs defaultValue="settings" className="mb-12 md:mb-16">
-                <TabsList variant="underline" className="mb-6">
+                <TabsList
+                    variant="underline"
+                    className="mb-6 sticky top-0 z-10 bg-background"
+                >
                     <div className="container">
                         <TabsTrigger variant="underline" value="settings">
                             Settings

@@ -1,4 +1,4 @@
-import { Moon, Sun } from "lucide-react";
+import { Check, Moon, Sun } from "lucide-react";
 import { forwardRef } from "react";
 
 import {
@@ -11,7 +11,7 @@ import {
 import { useTheme } from "@/context/theme";
 
 export const ThemeToggle = forwardRef<HTMLButtonElement>((props, ref) => {
-    const { setTheme } = useTheme();
+    const { theme, setTheme } = useTheme();
 
     return (
         <DropdownMenu>
@@ -24,12 +24,21 @@ export const ThemeToggle = forwardRef<HTMLButtonElement>((props, ref) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setTheme("light")}>
+                    <Check
+                        className={`mr-2 h-4 w-4 ${theme === "light" ? "opacity-100" : "opacity-0"}`}
+                    />
                     Light
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("dark")}>
+                    <Check
+                        className={`mr-2 h-4 w-4 ${theme === "dark" ? "opacity-100" : "opacity-0"}`}
+                    />
                     Dark
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("system")}>
+                    <Check
+                        className={`mr-2 h-4 w-4 ${theme === "system" ? "opacity-100" : "opacity-0"}`}
+                    />
                     System
                 </DropdownMenuItem>
             </DropdownMenuContent>

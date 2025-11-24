@@ -1,4 +1,5 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { motion } from "framer-motion";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -18,7 +19,7 @@ const TabsList = React.forwardRef<
             variant === "default" &&
                 "h-10 rounded-lg bg-muted p-1 justify-center",
             variant === "underline" &&
-                "h-12 border-b border-border gap-6 justify-start w-full",
+                "h-12 border-b border-border gap-6 justify-start w-full [will-change:transform]",
             className
         )}
         {...props}
@@ -31,20 +32,60 @@ const TabsTrigger = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
         variant?: "default" | "underline";
     }
->(({ className, variant = "default", ...props }, ref) => (
-    <TabsPrimitive.Trigger
-        ref={ref}
-        className={cn(
-            "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-            variant === "default" &&
-                "rounded-md px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
-            variant === "underline" &&
-                "relative px-4 py-3 data-[state=active]:text-foreground data-[state=active]:after:absolute data-[state=active]:after:bottom-[-1px] data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-[2px] data-[state=active]:after:bg-primary data-[state=active]:after:rounded-t-sm",
-            className
-        )}
-        {...props}
-    />
-));
+>(({ className, variant = "default", ...props }, ref) => {
+    const [isActive, setIsActive] = React.useState(false);
+    const internalRef = React.useRef<HTMLButtonElement>(null);
+
+    React.useImperativeHandle(ref, () => internalRef.current!);
+
+    React.useEffect(() => {
+        const element = internalRef.current;
+        if (!element) return;
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === "data-state") {
+                    const state = element.getAttribute("data-state");
+                    setIsActive(state === "active");
+                }
+            });
+        });
+
+        observer.observe(element, { attributes: true });
+        setIsActive(element.getAttribute("data-state") === "active");
+
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <TabsPrimitive.Trigger
+            ref={internalRef}
+            className={cn(
+                "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                variant === "default" &&
+                    "rounded-md px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
+                variant === "underline" &&
+                    "relative px-4 py-3 data-[state=active]:text-foreground",
+                className
+            )}
+            {...props}
+        >
+            {props.children}
+            {variant === "underline" && isActive && (
+                <motion.div
+                    layoutId="underline"
+                    className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-primary rounded-t-sm"
+                    initial={false}
+                    transition={{
+                        type: "tween",
+                        ease: "easeInOut",
+                        duration: 0.2
+                    }}
+                />
+            )}
+        </TabsPrimitive.Trigger>
+    );
+});
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
