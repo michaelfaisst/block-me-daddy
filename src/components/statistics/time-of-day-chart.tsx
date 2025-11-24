@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { Block } from "@/dto";
-import { aggregateByTimeOfDay } from "@/lib/statistics";
+import { aggregateByHour } from "@/lib/statistics";
 
 import { Card } from "../ui";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
@@ -20,7 +20,7 @@ const chartConfig = {
 
 export function TimeOfDayChart({ blocks }: TimeOfDayChartProps) {
     const chartData = useMemo(() => {
-        const aggregated = aggregateByTimeOfDay(blocks);
+        const aggregated = aggregateByHour(blocks);
 
         // Format hours in 24-hour format (e.g., 0 -> 00:00, 13 -> 13:00)
         return aggregated.map((item) => {

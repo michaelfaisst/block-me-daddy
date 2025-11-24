@@ -6,7 +6,6 @@ import {
     aggregateByDay,
     aggregateByDayOfWeek,
     aggregateByHour,
-    aggregateByTimeOfDay,
     aggregateByWeekAndWeekday,
     getBlocksInRange,
     getTopBlockedSites
@@ -359,15 +358,6 @@ describe("statistics", () => {
             const result = aggregateByDayOfWeek(multiWeek);
 
             expect(result[0]).toEqual({ day: "Monday", count: 3 });
-        });
-    });
-
-    describe("aggregateByTimeOfDay", () => {
-        it("should be equivalent to aggregateByHour", () => {
-            const hourResult = aggregateByHour(mockBlocks);
-            const timeOfDayResult = aggregateByTimeOfDay(mockBlocks);
-
-            expect(timeOfDayResult).toEqual(hourResult);
         });
     });
 

@@ -29,18 +29,11 @@ async function saveBlock(block: Block): Promise<void> {
             };
         }
 
-        console.log("Current statistics before save:", statistics);
-
         statistics.blocks.push(block);
 
         await chrome.storage.local.set({
             [STORAGE_KEYS.STATISTICS]: statistics
         });
-
-        console.log(
-            "Block saved successfully. Total blocks:",
-            statistics.blocks.length
-        );
     } catch (error) {
         console.error("Failed to save block:", error);
     }
@@ -84,18 +77,10 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
         storage[STORAGE_KEYS.ENABLED] !== false
     );
 
-    console.log("Blocking check:", {
-        url,
-        shouldBlock,
-        enabled: storage[STORAGE_KEYS.ENABLED]
-    });
-
     if (shouldBlock) {
         // Track the block
         const sites = (storage[STORAGE_KEYS.SITES] as Site[]) || [];
         const matchedSite = getSite(url, sites);
-
-        console.log("Block triggered:", { url, matchedSite });
 
         if (matchedSite) {
             const block: Block = {
@@ -105,11 +90,8 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
                 url: url
             };
 
-            console.log("Saving block:", block);
             // Save asynchronously without blocking the redirect
             saveBlock(block);
-        } else {
-            console.warn("Block triggered but no matched site found");
         }
 
         chrome.tabs.update(tab.id, { url: URLS.BLOCKED_PAGE });

@@ -126,18 +126,6 @@ export function aggregateByDayOfWeek(
 }
 
 /**
- * Aggregates blocks by time of day (hour 0-23)
- * Same as aggregateByHour but with more descriptive name for UI
- * @param blocks - Array of blocks to aggregate
- * @returns Array of objects with hour (0-23) and count
- */
-export function aggregateByTimeOfDay(
-    blocks: Block[]
-): { hour: number; count: number }[] {
-    return aggregateByHour(blocks);
-}
-
-/**
  * Aggregates blocks by week/year and weekday for heat map visualization
  * @param blocks - Array of blocks to aggregate
  * @returns Array of objects with week, year, weekday, and count
