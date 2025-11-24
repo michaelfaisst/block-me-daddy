@@ -6,11 +6,16 @@ import Schedules from "@/components/schedule";
 import AboutDialog from "../components/about-dialog";
 import BlockedSites from "../components/blocked-sites";
 import ImportExport from "../components/import-export";
+import { StatisticsDashboard } from "../components/statistics";
 import { ThemeToggle } from "../components/theme-toggle";
 import {
     Button,
     Label,
     Switch,
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
     Tooltip,
     TooltipContent,
     TooltipTrigger
@@ -66,27 +71,47 @@ const OptionsPage = () => {
                 nasty sites that suck all productivity out of you.
             </p>
 
-            <div className="mb-12 md:mb-16">
-                <p className="scroll-m-20 text-xl md:text-2xl font-bold tracking-tight mb-4">
-                    General settings
-                </p>
-                <div className="flex items-center space-x-2">
-                    <Switch
-                        id="airplane-mode"
-                        checked={enabled}
-                        onCheckedChange={(checked) => setEnabled(checked)}
-                    />
-                    <Label htmlFor="airplane-mode">Blocking enabled</Label>
-                </div>
-            </div>
+            <Tabs defaultValue="settings" className="mb-12 md:mb-16">
+                <TabsList className="mb-6">
+                    <TabsTrigger value="settings">Settings</TabsTrigger>
+                    <TabsTrigger value="statistics">Statistics</TabsTrigger>
+                </TabsList>
 
-            <div className="mb-12 md:mb-16">
-                <BlockedSites />
-            </div>
+                <TabsContent
+                    value="settings"
+                    className="space-y-12 md:space-y-16"
+                >
+                    <div>
+                        <p className="scroll-m-20 text-xl md:text-2xl font-bold tracking-tight mb-4">
+                            General settings
+                        </p>
+                        <div className="flex items-center space-x-2">
+                            <Switch
+                                id="airplane-mode"
+                                checked={enabled}
+                                onCheckedChange={(checked) =>
+                                    setEnabled(checked)
+                                }
+                            />
+                            <Label htmlFor="airplane-mode">
+                                Blocking enabled
+                            </Label>
+                        </div>
+                    </div>
 
-            <div className="">
-                <Schedules />
-            </div>
+                    <div>
+                        <BlockedSites />
+                    </div>
+
+                    <div>
+                        <Schedules />
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="statistics">
+                    <StatisticsDashboard />
+                </TabsContent>
+            </Tabs>
 
             <footer className="mt-12 md:mt-16 pt-6 md:pt-8 border-t">
                 <div className="flex justify-center">

@@ -8,7 +8,8 @@ export const STORAGE_KEYS = {
     SCHEDULES: "schedules",
     ENABLED: "enabled",
     ITEMS_PER_PAGE: "itemsPerPage",
-    THEME: "theme"
+    THEME: "theme",
+    STATISTICS: "statistics"
 } as const;
 
 // Pagination

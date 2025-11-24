@@ -15,3 +15,5 @@ export * from "./time-input";
 export * from "./scroll-area";
 export * from "./pagination";
 export * from "./select";
+export * from "./tabs";
+export * from "./chart";

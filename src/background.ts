@@ -1,6 +1,33 @@
-import { Schedule, Site } from "@/dto";
-import { shouldBlockSite } from "@/lib/blocking";
+import { createId } from "@paralleldrive/cuid2";
+
+import { BlockAttempt, Schedule, Site, Statistics } from "@/dto";
+import { getSite, shouldBlockSite } from "@/lib/blocking";
 import { STORAGE_KEYS, URLS } from "@/lib/constants";
+
+/**
+ * Saves a block attempt to storage
+ * @param blockAttempt - The block attempt record to save
+ */
+async function saveBlockAttempt(blockAttempt: BlockAttempt): Promise<void> {
+    try {
+        const storage = await chrome.storage.local.get([
+            STORAGE_KEYS.STATISTICS
+        ]);
+        const statistics: Statistics = (storage[
+            STORAGE_KEYS.STATISTICS
+        ] as Statistics) || {
+            blockAttempts: []
+        };
+
+        statistics.blockAttempts.push(blockAttempt);
+
+        await chrome.storage.local.set({
+            [STORAGE_KEYS.STATISTICS]: statistics
+        });
+    } catch (error) {
+        console.error("Failed to save block attempt:", error);
+    }
+}
 
 /**
  * Opens the extension options page when the extension icon is clicked
@@ -47,6 +74,22 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
     });
 
     if (shouldBlock) {
+        // Track the block attempt
+        const sites = (storage[STORAGE_KEYS.SITES] as Site[]) || [];
+        const matchedSite = getSite(url, sites);
+
+        if (matchedSite) {
+            const blockAttempt: BlockAttempt = {
+                id: createId(),
+                timestamp: Date.now(),
+                siteId: matchedSite.id,
+                url: url
+            };
+
+            // Save asynchronously without blocking the redirect
+            saveBlockAttempt(blockAttempt);
+        }
+
         chrome.tabs.update(tab.id, { url: URLS.BLOCKED_PAGE });
     }
 });
