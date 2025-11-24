@@ -1,3 +1,4 @@
+import { StatusIndicator } from "./status-indicator";
 import { Card, Switch } from "./ui";
 
 interface BlockingStatusCardProps {
@@ -17,16 +18,7 @@ export function BlockingStatusCard({
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="relative flex items-center justify-center">
-                        <div
-                            className={`w-2 h-2 rounded-full ${
-                                enabled ? "bg-green-500" : "bg-gray-400"
-                            }`}
-                        />
-                        {enabled && (
-                            <div className="absolute w-2 h-2 rounded-full bg-green-500 animate-ping" />
-                        )}
-                    </div>
+                    <StatusIndicator enabled={enabled} />
                     <span className="text-sm font-medium">
                         {enabled ? "Blocking enabled" : "Blocking disabled"}
                     </span>

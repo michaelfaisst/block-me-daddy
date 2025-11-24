@@ -5,7 +5,7 @@ import {
     LucideTrash,
     LucideX
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import {
@@ -102,8 +102,12 @@ const BlockedSites = () => {
     };
 
     // Filter sites based on search query
-    const filteredSites = sites.filter((site) =>
-        site.site.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredSites = useMemo(
+        () =>
+            sites.filter((site) =>
+                site.site.toLowerCase().includes(searchQuery.toLowerCase())
+            ),
+        [sites, searchQuery]
     );
 
     const totalPages = Math.ceil(filteredSites.length / itemsPerPage);
@@ -173,7 +177,7 @@ const BlockedSites = () => {
 
             <AnimatePresence visible={sites.length === 0}>
                 <Alert>
-                    <LucideMegaphone className="h-4 w-4 mr-4" />
+                    <LucideMegaphone className="h-4 w-4" />
                     <AlertTitle>You have no blocked sites yet!</AlertTitle>
                     <AlertDescription className="text-secondary-foreground">
                         Add your first site by clicking the button below. After
@@ -205,6 +209,7 @@ const BlockedSites = () => {
                                         setCurrentPage(1);
                                     }}
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                    aria-label="Clear search"
                                 >
                                     <LucideX className="h-4 w-4" />
                                 </button>
@@ -252,7 +257,7 @@ const BlockedSites = () => {
 
             {filteredSites.length === 0 && searchQuery && (
                 <Alert className="mb-4">
-                    <LucideSearch className="h-4 w-4 mr-4" />
+                    <LucideSearch className="h-4 w-4" />
                     <AlertTitle>No sites found</AlertTitle>
                     <AlertDescription className="text-secondary-foreground">
                         No blocked sites match your search query &quot;
@@ -296,6 +301,7 @@ const BlockedSites = () => {
                                 onCheckedChange={() =>
                                     toggleSiteEnabled(site.id)
                                 }
+                                aria-label={`Toggle ${site.site} blocking`}
                             />
                             <EditSiteDialog
                                 site={site}

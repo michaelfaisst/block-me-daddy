@@ -39,7 +39,11 @@ export function SettingsSidebar({
 }: SettingsSidebarProps) {
     return (
         <nav className="w-full md:w-48 lg:w-56 flex-shrink-0">
-            <div className="flex flex-row md:flex-col gap-1 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
+            <div
+                className="flex flex-row md:flex-col gap-1 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0"
+                role="tablist"
+                aria-label="Settings navigation"
+            >
                 {sidebarItems.map((item) => (
                     <button
                         key={item.id}
@@ -51,6 +55,9 @@ export function SettingsSidebar({
                                 ? "bg-accent text-accent-foreground"
                                 : "text-muted-foreground"
                         )}
+                        role="tab"
+                        aria-selected={activeSection === item.id}
+                        aria-controls={`${item.id}-panel`}
                     >
                         {item.icon}
                         <span>{item.label}</span>

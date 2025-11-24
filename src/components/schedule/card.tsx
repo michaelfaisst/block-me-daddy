@@ -46,7 +46,7 @@ const ScheduleCard = ({ schedule, onChange, onRemove }: Props) => {
         };
 
         checkActive();
-        const interval = setInterval(checkActive, 60000); // Check every minute
+        const interval = setInterval(checkActive, 20000); // Check every 20 seconds
 
         return () => clearInterval(interval);
     }, [schedule]);
