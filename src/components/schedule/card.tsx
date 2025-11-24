@@ -1,11 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit, LucideSave, LucideTrash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Schedule, scheduleSchema } from "@/dto";
+import { isInSchedule } from "@/lib/blocking";
 
 import {
+    Badge,
     Button,
     Card,
     CardContent,
@@ -30,11 +32,24 @@ interface Props {
 
 const ScheduleCard = ({ schedule, onChange, onRemove }: Props) => {
     const [editMode, setEditMode] = useState(false);
+    const [isActive, setIsActive] = useState(false);
 
     const form = useForm<Schedule>({
         resolver: zodResolver(scheduleSchema),
         defaultValues: schedule
     });
+
+    // Check if schedule is currently active
+    useEffect(() => {
+        const checkActive = () => {
+            setIsActive(isInSchedule([schedule]));
+        };
+
+        checkActive();
+        const interval = setInterval(checkActive, 60000); // Check every minute
+
+        return () => clearInterval(interval);
+    }, [schedule]);
 
     const handleSubmit = (schedule: Schedule) => {
         setEditMode(false);
@@ -44,18 +59,36 @@ const ScheduleCard = ({ schedule, onChange, onRemove }: Props) => {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
-                <Card className="relative">
-                    <Button
-                        variant="ghostDestructive"
-                        size="sm"
-                        className="absolute right-1 top-1 z-10"
-                        type="button"
-                        onClick={() => onRemove(schedule)}
-                    >
-                        <LucideTrash className="h-4 w-4" />
-                    </Button>
+                <Card
+                    className={
+                        isActive
+                            ? "relative border-gray-400 dark:border-gray-600"
+                            : "relative"
+                    }
+                >
                     <CardHeader className="relative">
-                        <CardTitle className="text-xl">Schedule</CardTitle>
+                        <div className="flex items-center justify-between gap-2">
+                            <CardTitle className="text-xl">Schedule</CardTitle>
+                            <div className="flex items-center gap-1">
+                                {isActive && (
+                                    <Badge className="bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 border-0 flex items-center gap-1.5">
+                                        <span className="relative flex h-2 w-2">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white dark:bg-gray-900 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-white dark:bg-gray-900"></span>
+                                        </span>
+                                        Active now
+                                    </Badge>
+                                )}
+                                <Button
+                                    variant="ghostDestructive"
+                                    size="sm"
+                                    type="button"
+                                    onClick={() => onRemove(schedule)}
+                                >
+                                    <LucideTrash className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <FormField
