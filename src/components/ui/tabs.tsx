@@ -33,33 +33,12 @@ const TabsTrigger = React.forwardRef<
         variant?: "default" | "underline";
     }
 >(({ className, variant = "default", ...props }, ref) => {
-    const [isActive, setIsActive] = React.useState(false);
-    const internalRef = React.useRef<HTMLButtonElement>(null);
-
-    React.useImperativeHandle(ref, () => internalRef.current!);
-
-    React.useEffect(() => {
-        const element = internalRef.current;
-        if (!element) return;
-
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === "data-state") {
-                    const state = element.getAttribute("data-state");
-                    setIsActive(state === "active");
-                }
-            });
-        });
-
-        observer.observe(element, { attributes: true });
-        setIsActive(element.getAttribute("data-state") === "active");
-
-        return () => observer.disconnect();
-    }, []);
+    // Determine if this trigger is active using the data-state prop provided by Radix
+    const isActive = props['data-state'] === 'active';
 
     return (
         <TabsPrimitive.Trigger
-            ref={internalRef}
+            ref={ref}
             className={cn(
                 "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
                 variant === "default" &&
