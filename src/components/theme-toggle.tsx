@@ -9,6 +9,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui";
 import { useTheme } from "@/context/theme";
+import { cn } from "@/lib/utils";
 
 export const ThemeToggle = forwardRef<HTMLButtonElement>((props, ref) => {
     const { theme, setTheme } = useTheme();
@@ -25,19 +26,28 @@ export const ThemeToggle = forwardRef<HTMLButtonElement>((props, ref) => {
             <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setTheme("light")}>
                     <Check
-                        className={`mr-2 h-4 w-4 ${theme === "light" ? "opacity-100" : "opacity-0"}`}
+                        className={cn(
+                            "mr-2 h-4 w-4",
+                            theme === "light" ? "opacity-100" : "opacity-0"
+                        )}
                     />
                     Light
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("dark")}>
                     <Check
-                        className={`mr-2 h-4 w-4 ${theme === "dark" ? "opacity-100" : "opacity-0"}`}
+                        className={cn(
+                            "mr-2 h-4 w-4",
+                            theme === "dark" ? "opacity-100" : "opacity-0"
+                        )}
                     />
                     Dark
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("system")}>
                     <Check
-                        className={`mr-2 h-4 w-4 ${theme === "system" ? "opacity-100" : "opacity-0"}`}
+                        className={cn(
+                            "mr-2 h-4 w-4",
+                            theme === "system" ? "opacity-100" : "opacity-0"
+                        )}
                     />
                     System
                 </DropdownMenuItem>
