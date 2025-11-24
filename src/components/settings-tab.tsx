@@ -42,7 +42,7 @@ export function SettingsTab() {
                     </p>
                     <ImportExport />
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-muted-foreground">
                     Export your sites and schedules to a JSON file or import
                     them from a backup.
                 </p>
