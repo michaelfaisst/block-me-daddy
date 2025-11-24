@@ -124,9 +124,9 @@ const BlockedSites = () => {
 
     return (
         <>
-            <div className="flex items-center justify-between gap-8 mb-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
                 <div>
-                    <p className="scroll-m-20 text-2xl font-bold tracking-tight mb-2">
+                    <p className="scroll-m-20 text-xl md:text-2xl font-bold tracking-tight mb-2">
                         Blocked sites
                     </p>
                     <p className="scroll-m-20 text-sm text-gray-500 dark:text-gray-400">
@@ -134,7 +134,7 @@ const BlockedSites = () => {
                         blocking is enabled.
                     </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-shrink-0">
                     <PresetSelector
                         existingSites={sites}
                         onPresetsSelected={addPresetSites}
@@ -156,7 +156,7 @@ const BlockedSites = () => {
             </AnimatePresence>
 
             {sites.length > 0 && (
-                <div className="flex items-center justify-between gap-8 mb-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                             Show
@@ -194,11 +194,11 @@ const BlockedSites = () => {
                 {paginatedSites.map((site) => (
                     <div
                         key={site.id}
-                        className="px-4 py-2.5 flex flex-row justify-between items-center bg-card border rounded-xl"
+                        className="px-4 py-2.5 flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center bg-card border rounded-xl"
                     >
                         <div className="text-sm flex flex-row items-center">
                             <img
-                                className="w-4 h-4 mr-2"
+                                className="w-4 h-4 mr-2 flex-shrink-0"
                                 src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${site.site}`}
                             />
                             <div className="break-all">{site.site}</div>
@@ -213,7 +213,7 @@ const BlockedSites = () => {
                                 </Badge>
                             )}
                         </div>
-                        <div className="flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 self-end sm:self-auto">
                             <EditSiteDialog
                                 site={site}
                                 sites={sites}
