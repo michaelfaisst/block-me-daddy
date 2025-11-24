@@ -32,7 +32,7 @@ const TabsTrigger = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> & {
         variant?: "default" | "underline";
     }
->(({ className, variant = "default", value, ...props }, ref) => {
+>(({ className, variant = "default", value, children, ...props }, ref) => {
     const triggerRef = React.useRef<HTMLButtonElement>(null);
     const [isActive, setIsActive] = React.useState(false);
 
@@ -73,7 +73,7 @@ const TabsTrigger = React.forwardRef<
             )}
             {...props}
         >
-            {props.children}
+            {children}
             {variant === "underline" && isActive && (
                 <motion.div
                     layoutId="underline"
