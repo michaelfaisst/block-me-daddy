@@ -41,3 +41,8 @@ export const URLS = {
     OPTIONS_PAGE: "options.html",
     FAVICON_API: "https://s2.googleusercontent.com/s2/favicons?domain_url="
 } as const;
+
+// Storage
+export const STORAGE = {
+    QUOTA_BYTES: 10 * 1024 * 1024 // 10 MB - Chrome extension local storage quota
+} as const;

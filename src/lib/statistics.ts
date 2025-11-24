@@ -12,6 +12,8 @@ import {
 
 import { Block, Site } from "@/dto";
 
+import { STORAGE } from "./constants";
+
 /**
  * Filters blocks within a specific date range
  * @param blocks - Array of all blocks
@@ -233,22 +235,20 @@ export async function getStorageUsage(): Promise<{
     total: number;
     percentage: number;
 }> {
-    const QUOTA_BYTES = 10 * 1024 * 1024; // 10 MB in bytes
-
     try {
         const used = await chrome.storage.local.getBytesInUse(null);
-        const percentage = (used / QUOTA_BYTES) * 100;
+        const percentage = (used / STORAGE.QUOTA_BYTES) * 100;
 
         return {
             used,
-            total: QUOTA_BYTES,
+            total: STORAGE.QUOTA_BYTES,
             percentage
         };
     } catch (error) {
         console.error("Failed to get storage usage:", error);
         return {
             used: 0,
-            total: QUOTA_BYTES,
+            total: STORAGE.QUOTA_BYTES,
             percentage: 0
         };
     }

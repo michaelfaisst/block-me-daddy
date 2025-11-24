@@ -9,6 +9,7 @@ import {
 } from "date-fns";
 import { ChartColumn, FlaskConical, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import { Block, Site, Statistics } from "@/dto";
@@ -92,7 +93,7 @@ export function StatisticsDashboard() {
 
     const generateTestBlocks = () => {
         if (sites.length === 0) {
-            alert("Please add at least one site first!");
+            toast.error("Please add at least one site first!");
             return;
         }
 
@@ -134,7 +135,7 @@ export function StatisticsDashboard() {
             blocks: [...statistics.blocks, ...testBlocks]
         };
         setStatistics(updatedStatistics);
-        alert(`Generated ${testBlocks.length} test block entries!`);
+        toast.success(`Generated ${testBlocks.length} test block entries!`);
     };
 
     const formatBytes = (bytes: number): string => {
@@ -145,22 +146,25 @@ export function StatisticsDashboard() {
         return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
     };
 
+    // Generate Test Data button (dev mode only)
+    const generateTestDataButton = import.meta.env.DEV && sites.length > 0 && (
+        <Button
+            variant="outline"
+            size="sm"
+            onClick={generateTestBlocks}
+            title="Generate 5000 test block entries (Dev only)"
+        >
+            <FlaskConical className="mr-2 h-4 w-4" />
+            Generate Test Data
+        </Button>
+    );
+
     if (totalBlocks === 0) {
         return (
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <h2 className="text-2xl font-bold">Statistics</h2>
-                    {import.meta.env.DEV && sites.length > 0 && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={generateTestBlocks}
-                            title="Generate 5000 test block entries (Dev only)"
-                        >
-                            <FlaskConical className="mr-2 h-4 w-4" />
-                            Generate Test Data
-                        </Button>
-                    )}
+                    {generateTestDataButton}
                 </div>
 
                 <div className="flex flex-col items-center justify-center h-[400px] text-center space-y-4">
@@ -199,17 +203,7 @@ export function StatisticsDashboard() {
                         </div>
                     )}
                     <div className="flex gap-2">
-                        {import.meta.env.DEV && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={generateTestBlocks}
-                                title="Generate 5000 test block entries (Dev only)"
-                            >
-                                <FlaskConical className="mr-2 h-4 w-4" />
-                                Generate Test Data
-                            </Button>
-                        )}
+                        {generateTestDataButton}
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button variant="ghostDestructive" size="sm">

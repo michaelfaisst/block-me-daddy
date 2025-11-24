@@ -41,7 +41,7 @@ export function BlocksHeatmap({ blocks }: BlocksHeatmapProps) {
         // Start from 52 weeks ago
         let iterDate = addWeeks(currentDate, -52);
 
-        // Generate 53 weeks (52 weeks ago + current week)
+        // Generate 53 weeks total (weeks 0-52 inclusive: 52 weeks ago through current week)
         for (let i = 0; i <= 52; i++) {
             const year = getISOWeekYear(iterDate);
             const week = getISOWeek(iterDate);

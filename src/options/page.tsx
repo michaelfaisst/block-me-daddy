@@ -1,4 +1,5 @@
 import { GithubIcon } from "lucide-react";
+import { Toaster } from "sonner";
 
 import AboutDialog from "../components/about-dialog";
 import ImportExport from "../components/import-export";
@@ -26,6 +27,7 @@ const OptionsPage = () => {
 
     return (
         <>
+            <Toaster richColors position="top-right" />
             <div className="container pt-6 md:pt-12">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
                     <h1 className="scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter">
