@@ -9,7 +9,9 @@ export const STORAGE_KEYS = {
     ENABLED: "enabled",
     ITEMS_PER_PAGE: "itemsPerPage",
     THEME: "theme",
-    STATISTICS: "statistics"
+    STATISTICS: "statistics",
+    CHART_TIME_RANGE: "chartTimeRange",
+    CHART_TOP_SITES_LIMIT: "chartTopSitesLimit"
 } as const;
 
 // Pagination

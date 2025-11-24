@@ -1,8 +1,10 @@
 import { format, subDays } from "date-fns";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { useChromeStorageLocal } from "use-chrome-storage";
 
 import { Block } from "@/dto";
+import { STORAGE_KEYS } from "@/lib/constants";
 import { aggregateByDay, getBlocksInRange } from "@/lib/statistics";
 
 import { Button, ButtonGroup, Card } from "../ui";
@@ -22,7 +24,8 @@ const chartConfig = {
 };
 
 export function BlocksOverTimeChart({ blocks }: BlocksOverTimeChartProps) {
-    const [timeRange, setTimeRange] = useState<TimeRange>("7d");
+    const [timeRange, setTimeRange, , , isInitialStateResolved] =
+        useChromeStorageLocal<TimeRange>(STORAGE_KEYS.CHART_TIME_RANGE, "7d");
 
     const chartData = useMemo(() => {
         const today = new Date();
@@ -48,6 +51,21 @@ export function BlocksOverTimeChart({ blocks }: BlocksOverTimeChartProps) {
             count: item.count
         }));
     }, [blocks, timeRange]);
+
+    // Don't render chart until initial state is loaded to prevent flickering
+    if (!isInitialStateResolved) {
+        return (
+            <Card className="p-6">
+                <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">Blocks Over Time</h3>
+                    <div className="h-8 w-64 animate-pulse rounded-md bg-muted" />
+                </div>
+                <div className="flex h-[300px] items-center justify-center">
+                    <div className="h-full w-full animate-pulse rounded-md bg-muted" />
+                </div>
+            </Card>
+        );
+    }
 
     return (
         <Card className="p-6">

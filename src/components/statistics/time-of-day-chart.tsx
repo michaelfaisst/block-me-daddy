@@ -22,13 +22,15 @@ export function TimeOfDayChart({ blocks }: TimeOfDayChartProps) {
     const chartData = useMemo(() => {
         const aggregated = aggregateByTimeOfDay(blocks);
 
-        // Format hours for better display (e.g., 0 -> 12am, 13 -> 1pm)
+        // Format hours in 24-hour format (e.g., 0 -> 00:00, 13 -> 13:00)
         return aggregated.map((item) => {
-            const hour = item.hour;
-            const ampm = hour >= 12 ? "pm" : "am";
-            const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+            const hourStr = item.hour.toString().padStart(2, "0");
+            const nextHourStr = ((item.hour + 1) % 24)
+                .toString()
+                .padStart(2, "0");
             return {
-                hour: `${displayHour}${ampm}`,
+                hour: `${hourStr}:00`,
+                hourRange: `${hourStr}:00 - ${nextHourStr}:00`,
                 count: item.count
             };
         });
@@ -66,7 +68,18 @@ export function TimeOfDayChart({ blocks }: TimeOfDayChartProps) {
                             tickMargin={8}
                             allowDecimals={false}
                         />
-                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <ChartTooltip
+                            content={
+                                <ChartTooltipContent
+                                    labelFormatter={(_, payload) => {
+                                        if (payload && payload.length > 0) {
+                                            return payload[0].payload.hourRange;
+                                        }
+                                        return "";
+                                    }}
+                                />
+                            }
+                        />
                         <Bar
                             dataKey="count"
                             fill="var(--color-count)"
