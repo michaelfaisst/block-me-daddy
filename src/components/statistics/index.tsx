@@ -270,8 +270,10 @@ export function StatisticsDashboard() {
             {/* Charts */}
             <div className="space-y-4">
                 <BlocksOverTimeChart blocks={statistics.blocks} />
-                <BlocksHeatmap blocks={statistics.blocks} />
-                <TopSitesChart blocks={statistics.blocks} sites={sites} />
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    <BlocksHeatmap blocks={statistics.blocks} />
+                    <TopSitesChart blocks={statistics.blocks} sites={sites} />
+                </div>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     <DayOfWeekChart blocks={statistics.blocks} />
                     <TimeOfDayChart blocks={statistics.blocks} />
