@@ -30,9 +30,9 @@ const OptionsPage = () => {
     };
 
     return (
-        <div className="container py-12">
-            <div className="flex flex-row items-center justify-between">
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tighter lg:text-5xl mb-4">
+        <div className="container py-6 md:py-12">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
+                <h1 className="scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tighter">
                     Block me daddy
                 </h1>
                 <div className="flex flex-row items-center gap-2">
@@ -61,13 +61,13 @@ const OptionsPage = () => {
                     </Tooltip>
                 </div>
             </div>
-            <p className="scroll-m-20 text-base text-gray-500 dark:text-gray-400 mb-12">
+            <p className="scroll-m-20 text-sm md:text-base text-gray-500 dark:text-gray-400 mb-8 md:mb-12">
                 Block sites like youtube, facebook, instagram and all the other
                 nasty sites that suck all productivity out of you.
             </p>
 
-            <div className="mb-16">
-                <p className="scroll-m-20 text-2xl font-bold tracking-tight mb-4">
+            <div className="mb-12 md:mb-16">
+                <p className="scroll-m-20 text-xl md:text-2xl font-bold tracking-tight mb-4">
                     General settings
                 </p>
                 <div className="flex items-center space-x-2">
@@ -80,7 +80,7 @@ const OptionsPage = () => {
                 </div>
             </div>
 
-            <div className="mb-16">
+            <div className="mb-12 md:mb-16">
                 <BlockedSites />
             </div>
 
@@ -88,7 +88,7 @@ const OptionsPage = () => {
                 <Schedules />
             </div>
 
-            <footer className="mt-16 pt-8 border-t">
+            <footer className="mt-12 md:mt-16 pt-6 md:pt-8 border-t">
                 <div className="flex justify-center">
                     <AboutDialog />
                 </div>

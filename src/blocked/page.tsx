@@ -21,17 +21,17 @@ const BlockedPage = () => {
     const [imageError, setImageError] = useState(false);
 
     return (
-        <div className="container flex flex-col items-center justify-center h-screen">
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-8 block">
+        <div className="container flex flex-col items-center justify-center h-screen px-4">
+            <h1 className="scroll-m-20 text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-6 md:mb-8 block">
                 Hell no!
             </h1>
 
-            <p className="text-lg text-muted-foreground mb-1 text-center">
+            <p className="text-base md:text-lg text-muted-foreground mb-1 text-center">
                 You&apos;ve told me you don&apos;t want to see this page again.
                 So I&apos;m not showing it to you.
             </p>
 
-            <p className="text-lg font-bold mb-8 text-center">
+            <p className="text-base md:text-lg font-bold mb-6 md:mb-8 text-center">
                 Sorry, not sorry.
             </p>
 
@@ -43,7 +43,7 @@ const BlockedPage = () => {
                     onError={() => setImageError(true)}
                 />
             ) : (
-                <div className="text-6xl">🚫</div>
+                <div className="text-5xl md:text-6xl">🚫</div>
             )}
         </div>
     );
