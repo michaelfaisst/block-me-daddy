@@ -32,7 +32,8 @@ const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
         defaultValues: {
             site: "",
             exact: false,
-            blockSubdomains: true
+            blockSubdomains: true,
+            enabled: true
         }
     });
 
@@ -52,7 +53,8 @@ const AddSiteDialog = ({ onSiteAdded }: AddSiteDialogProps) => {
             site: data.site,
             exact: data.exact,
             // When exact is true, blockSubdomains should always be false
-            blockSubdomains: data.exact ? false : data.blockSubdomains
+            blockSubdomains: data.exact ? false : data.blockSubdomains,
+            enabled: data.enabled
         };
         onSiteAdded(newSite);
         setOpen(false);

@@ -1,4 +1,5 @@
 export * from "./button";
+export * from "./button-group";
 export * from "./input";
 export * from "./dialog";
 export * from "./label";
@@ -15,3 +16,5 @@ export * from "./time-input";
 export * from "./scroll-area";
 export * from "./pagination";
 export * from "./select";
+export * from "./tabs";
+export * from "./chart";

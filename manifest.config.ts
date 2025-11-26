@@ -3,7 +3,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 export default defineManifest({
     manifest_version: 3,
     name: "Block me daddy",
-    version: "1.0.0",
+    version: "1.1.0",
     description:
         "Stop procrastinating and get things done by blocking distracting websites.",
     action: { default_title: "Block me daddy" },

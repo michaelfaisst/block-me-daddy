@@ -1,6 +1,11 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { LucideMegaphone, LucideTrash } from "lucide-react";
-import { useState } from "react";
+import {
+    LucideMegaphone,
+    LucideSearch,
+    LucideTrash,
+    LucideX
+} from "lucide-react";
+import { useMemo, useState } from "react";
 import { useChromeStorageLocal } from "use-chrome-storage";
 
 import {
@@ -9,6 +14,7 @@ import {
     AlertTitle,
     Badge,
     Button,
+    Input,
     Pagination,
     PaginationContent,
     PaginationItem,
@@ -19,7 +25,8 @@ import {
     SelectContent,
     SelectItem,
     SelectTrigger,
-    SelectValue
+    SelectValue,
+    Switch
 } from "@/components/ui";
 import { Site } from "@/dto";
 import { ANIMATION, PAGINATION, STORAGE_KEYS } from "@/lib/constants";
@@ -39,6 +46,7 @@ const BlockedSites = () => {
         STORAGE_KEYS.ITEMS_PER_PAGE,
         PAGINATION.DEFAULT_ITEMS_PER_PAGE
     );
+    const [searchQuery, setSearchQuery] = useState("");
     const [animationParent] = useAutoAnimate({
         duration: ANIMATION.DEFAULT_DURATION
     });
@@ -54,6 +62,21 @@ const BlockedSites = () => {
                     return {
                         ...site,
                         ...updatedSite
+                    };
+                }
+
+                return site;
+            })
+        );
+    };
+
+    const toggleSiteEnabled = (id: string) => {
+        setSites(
+            sites.map((site) => {
+                if (site.id === id) {
+                    return {
+                        ...site,
+                        enabled: !(site.enabled ?? true)
                     };
                 }
 
@@ -78,13 +101,22 @@ const BlockedSites = () => {
         setCurrentPage(newTotalPages);
     };
 
-    const totalPages = Math.ceil(sites.length / itemsPerPage);
+    // Filter sites based on search query
+    const filteredSites = useMemo(
+        () =>
+            sites.filter((site) =>
+                site.site.toLowerCase().includes(searchQuery.toLowerCase())
+            ),
+        [sites, searchQuery]
+    );
+
+    const totalPages = Math.ceil(filteredSites.length / itemsPerPage);
     // Ensure current page is within valid range
     const validCurrentPage =
         totalPages > 0 && currentPage > totalPages ? 1 : currentPage;
     const startIndex = (validCurrentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const paginatedSites = sites.slice(startIndex, endIndex);
+    const paginatedSites = filteredSites.slice(startIndex, endIndex);
 
     const getPageNumbers = () => {
         const pages: (number | string)[] = [];
@@ -124,9 +156,9 @@ const BlockedSites = () => {
 
     return (
         <>
-            <div className="flex items-center justify-between gap-8 mb-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
                 <div>
-                    <p className="scroll-m-20 text-2xl font-bold tracking-tight mb-2">
+                    <p className="scroll-m-20 text-xl md:text-2xl font-bold tracking-tight mb-2">
                         Blocked sites
                     </p>
                     <p className="scroll-m-20 text-sm text-gray-500 dark:text-gray-400">
@@ -134,7 +166,7 @@ const BlockedSites = () => {
                         blocking is enabled.
                     </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-shrink-0">
                     <PresetSelector
                         existingSites={sites}
                         onPresetsSelected={addPresetSites}
@@ -145,7 +177,7 @@ const BlockedSites = () => {
 
             <AnimatePresence visible={sites.length === 0}>
                 <Alert>
-                    <LucideMegaphone className="h-4 w-4 mr-4" />
+                    <LucideMegaphone className="h-4 w-4" />
                     <AlertTitle>You have no blocked sites yet!</AlertTitle>
                     <AlertDescription className="text-secondary-foreground">
                         Add your first site by clicking the button below. After
@@ -156,49 +188,94 @@ const BlockedSites = () => {
             </AnimatePresence>
 
             {sites.length > 0 && (
-                <div className="flex items-center justify-between gap-8 mb-4">
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                            Show
-                        </span>
-                        <Select
-                            value={itemsPerPage.toString()}
-                            onValueChange={(value) => {
-                                setItemsPerPage(Number(value));
-                                setCurrentPage(1);
-                            }}
-                        >
-                            <SelectTrigger className="w-[70px]">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="5">5</SelectItem>
-                                <SelectItem value="10">10</SelectItem>
-                                <SelectItem value="25">25</SelectItem>
-                                <SelectItem value="50">50</SelectItem>
-                                <SelectItem value="100">100</SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                            per page
-                        </span>
+                <>
+                    <div className="mb-4">
+                        <div className="relative">
+                            <LucideSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+                            <Input
+                                type="text"
+                                placeholder="Search blocked sites..."
+                                value={searchQuery}
+                                onChange={(e) => {
+                                    setSearchQuery(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="pl-9 pr-9"
+                            />
+                            {searchQuery && (
+                                <button
+                                    onClick={() => {
+                                        setSearchQuery("");
+                                        setCurrentPage(1);
+                                    }}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                                    aria-label="Clear search"
+                                >
+                                    <LucideX className="h-4 w-4" />
+                                </button>
+                            )}
+                        </div>
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {sites.length} {sites.length === 1 ? "site" : "sites"}{" "}
-                        total
+
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                                Show
+                            </span>
+                            <Select
+                                value={itemsPerPage.toString()}
+                                onValueChange={(value) => {
+                                    setItemsPerPage(Number(value));
+                                    setCurrentPage(1);
+                                }}
+                            >
+                                <SelectTrigger className="w-[70px]">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="5">5</SelectItem>
+                                    <SelectItem value="10">10</SelectItem>
+                                    <SelectItem value="25">25</SelectItem>
+                                    <SelectItem value="50">50</SelectItem>
+                                    <SelectItem value="100">100</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                                per page
+                            </span>
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {searchQuery
+                                ? `${filteredSites.length} of ${sites.length}`
+                                : `${sites.length}`}{" "}
+                            {sites.length === 1 ? "site" : "sites"}
+                            {searchQuery ? "" : " total"}
+                        </div>
                     </div>
-                </div>
+                </>
+            )}
+
+            {filteredSites.length === 0 && searchQuery && (
+                <Alert className="mb-4">
+                    <LucideSearch className="h-4 w-4" />
+                    <AlertTitle>No sites found</AlertTitle>
+                    <AlertDescription className="text-secondary-foreground">
+                        No blocked sites match your search query &quot;
+                        {searchQuery}
+                        &quot;. Try a different search term.
+                    </AlertDescription>
+                </Alert>
             )}
 
             <div className="flex flex-col gap-2 mb-4" ref={animationParent}>
                 {paginatedSites.map((site) => (
                     <div
                         key={site.id}
-                        className="px-4 py-2.5 flex flex-row justify-between items-center bg-card border rounded-xl"
+                        className="px-4 py-2.5 flex flex-col sm:flex-row sm:justify-between gap-2 sm:items-center bg-card border rounded-xl"
                     >
                         <div className="text-sm flex flex-row items-center">
                             <img
-                                className="w-4 h-4 mr-2"
+                                className="w-4 h-4 mr-2 flex-shrink-0"
                                 src={`https://s2.googleusercontent.com/s2/favicons?domain_url=${site.site}`}
                             />
                             <div className="break-all">{site.site}</div>
@@ -212,8 +289,20 @@ const BlockedSites = () => {
                                     Allow subdomains
                                 </Badge>
                             )}
+                            {!(site.enabled ?? true) && (
+                                <Badge variant="outline" className="ml-4">
+                                    Disabled
+                                </Badge>
+                            )}
                         </div>
-                        <div className="flex flex-row items-center gap-2">
+                        <div className="flex flex-row items-center gap-2 self-end sm:self-auto">
+                            <Switch
+                                checked={site.enabled ?? true}
+                                onCheckedChange={() =>
+                                    toggleSiteEnabled(site.id)
+                                }
+                                aria-label={`Toggle ${site.site} blocking`}
+                            />
                             <EditSiteDialog
                                 site={site}
                                 sites={sites}

@@ -31,7 +31,8 @@ const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
         defaultValues: {
             site: site.site,
             exact: site.exact,
-            blockSubdomains: site.blockSubdomains ?? true
+            blockSubdomains: site.blockSubdomains ?? true,
+            enabled: site.enabled ?? true
         }
     });
 
@@ -53,7 +54,8 @@ const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
             id: site.id,
             site: data.site,
             exact: data.exact,
-            blockSubdomains: data.exact ? false : data.blockSubdomains
+            blockSubdomains: data.exact ? false : data.blockSubdomains,
+            enabled: data.enabled
         };
 
         onSiteUpdated(updatedSite);
@@ -67,7 +69,8 @@ const EditSiteDialog = ({ site, sites, onSiteUpdated }: Props) => {
             form.reset({
                 site: site.site,
                 exact: site.exact,
-                blockSubdomains: site.blockSubdomains ?? true
+                blockSubdomains: site.blockSubdomains ?? true,
+                enabled: site.enabled ?? true
             });
         }
     };

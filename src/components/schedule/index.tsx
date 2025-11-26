@@ -59,7 +59,7 @@ const Schedules = () => {
     return (
         <>
             <div>
-                <p className="scroll-m-20 text-2xl font-bold tracking-tight mb-2">
+                <p className="scroll-m-20 text-xl md:text-2xl font-bold tracking-tight mb-2">
                     Schedule
                 </p>
             </div>
@@ -90,7 +90,10 @@ const Schedules = () => {
                 </div>
             </AnimatePresence>
 
-            <div className="grid grid-cols-4 gap-4" ref={animationParent}>
+            <div
+                className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+                ref={animationParent}
+            >
                 {schedules.map((schedule) => (
                     <ScheduleCard
                         key={schedule.id}

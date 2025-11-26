@@ -623,6 +623,68 @@ describe("blocking logic", () => {
             );
             expect(result2).toBe(false);
         });
+
+        it("should return false when site is disabled (enabled=false)", () => {
+            const disabledSites: Site[] = [
+                {
+                    id: "1",
+                    site: "https://facebook.com",
+                    exact: false,
+                    enabled: false
+                }
+            ];
+            const now = parseISO("2025-01-06T12:00:00"); // Monday at 12:00
+
+            const result = shouldBlockSite(
+                "https://facebook.com",
+                disabledSites,
+                mockSchedules,
+                true,
+                now
+            );
+            expect(result).toBe(false);
+        });
+
+        it("should return true when site is enabled (enabled=true)", () => {
+            const enabledSites: Site[] = [
+                {
+                    id: "1",
+                    site: "https://facebook.com",
+                    exact: false,
+                    enabled: true
+                }
+            ];
+            const now = parseISO("2025-01-06T12:00:00"); // Monday at 12:00
+
+            const result = shouldBlockSite(
+                "https://facebook.com",
+                enabledSites,
+                mockSchedules,
+                true,
+                now
+            );
+            expect(result).toBe(true);
+        });
+
+        it("should default to enabled when enabled property is not set", () => {
+            const sitesWithoutEnabledProp: Site[] = [
+                {
+                    id: "1",
+                    site: "https://facebook.com",
+                    exact: false
+                }
+            ];
+            const now = parseISO("2025-01-06T12:00:00"); // Monday at 12:00
+
+            const result = shouldBlockSite(
+                "https://facebook.com",
+                sitesWithoutEnabledProp,
+                mockSchedules,
+                true,
+                now
+            );
+            expect(result).toBe(true);
+        });
     });
 
     describe("normalizeHostname", () => {
