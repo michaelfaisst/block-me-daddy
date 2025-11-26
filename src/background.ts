@@ -68,13 +68,16 @@ chrome.tabs.onUpdated.addListener(async (_, changeInfo, tab) => {
         STORAGE_KEYS.SCHEDULES
     ]);
 
-    if (storage[STORAGE_KEYS.ENABLED] === false) return;
+    const enabled =
+        (storage[STORAGE_KEYS.ENABLED] as boolean | undefined) ?? true;
+
+    if (enabled === false) return;
 
     const shouldBlock = shouldBlockSite(
         url,
         (storage[STORAGE_KEYS.SITES] as Site[]) || [],
         (storage[STORAGE_KEYS.SCHEDULES] as Schedule[]) || [],
-        storage[STORAGE_KEYS.ENABLED] !== false
+        enabled
     );
 
     if (shouldBlock) {
